@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RichRichScrapes | Rug Target Analyzer</title>
+    <meta name="description" content="Real-time analysis of trending coins scored against known rug pull copy parameters. Protect yourself by seeing what the copy-ruggers see." />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="256x256" />
+    <script src="/config.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+      *{margin:0;padding:0;box-sizing:border-box}
+      body{background:#0a0a0a;color:#e5e7eb;font-family:'Inter',system-ui,-apple-system,sans-serif;min-height:100vh}
+      a{color:#22c55f;text-decoration:none}a:hover{color:#24b457}
+
+      /* ─── NAV ─── */
+      .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #1f2937;background:#111}
+      .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:#fff}
+      .nav-logo img{height:32px;width:32px;border-radius:8px}
+      .nav-links{display:flex;gap:6px;flex-wrap:wrap}
+      .nav-links a{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#9ca3af;transition:all .2s}
+      .nav-links a:hover,.nav-links a.active{color:#fff;background:#1f2937}
+      .nav-links a.active{color:#22c55f}
+
+      /* ─── LAYOUT ─── */
+      .container{max-width:900px;margin:32px auto;padding:0 16px}
+      .card{background:#111;border:1px solid #1f2937;border-radius:16px;padding:28px;margin-bottom:16px}
+      .card h2{font-size:20px;font-weight:700;margin-bottom:4px;color:#fff}
+      .card .subtitle{font-size:13px;color:#6b7280;margin-bottom:20px}
+
+      /* ─── HERO / TOP TARGET ─── */
+      .hero-card{background:linear-gradient(135deg,#111 0%,#0f1a12 100%);border:1px solid #22c55f33;border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
+      .hero-card::before{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,#22c55f08 0%,transparent 70%);pointer-events:none}
+      .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:#22c55f18;border:1px solid #22c55f44;border-radius:8px;font-size:11px;font-weight:600;color:#22c55f;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+      .hero-badge .pulse{width:8px;height:8px;border-radius:50%;background:#22c55f;animation:pulse 2s infinite}
+      @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+      .hero-top{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+      .hero-img{width:64px;height:64px;border-radius:14px;border:2px solid #22c55f44;object-fit:cover;flex-shrink:0}
+      .hero-name{font-size:24px;font-weight:800;color:#fff;line-height:1.2}
+      .hero-ticker{font-size:14px;color:#9ca3af;font-weight:500;margin-top:2px}
+      .hero-score-ring{margin-left:auto;position:relative;width:72px;height:72px;flex-shrink:0}
+      .hero-score-ring svg{transform:rotate(-90deg)}
+      .hero-score-ring .score-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff}
+      .hero-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+      .hero-metric{padding:12px;background:#0a0a0a;border:1px solid #1f2937;border-radius:10px}
+      .hero-metric .label{font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+      .hero-metric .value{font-size:15px;font-weight:700;color:#fff}
+      .hero-metric .value.green{color:#22c55f}
+      .hero-metric .value.yellow{color:#eab308}
+      .hero-metric .value.red{color:#ef4444}
+
+      /* ─── PARAM BARS ─── */
+      .param-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+      .param-bar{padding:10px 12px;background:#0a0a0a;border:1px solid #1f2937;border-radius:8px}
+      .param-bar .param-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+      .param-bar .param-name{font-size:11px;color:#9ca3af;font-weight:500}
+      .param-bar .param-pts{font-size:11px;font-weight:700}
+      .param-bar .bar-track{height:4px;background:#1f2937;border-radius:2px;overflow:hidden}
+      .param-bar .bar-fill{height:100%;border-radius:2px;transition:width .6s ease}
+
+      /* ─── TOKEN LIST ─── */
+      .token-row{display:flex;align-items:center;gap:14px;padding:16px;background:#111;border:1px solid #1f2937;border-radius:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+      .token-row:hover{border-color:#374151;background:#161616}
+      .token-row.expanded{border-color:#22c55f44}
+      .token-rank{width:28px;height:28px;border-radius:8px;background:#1f2937;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#9ca3af;flex-shrink:0}
+      .token-rank.top3{background:#22c55f22;color:#22c55f}
+      .token-img{width:40px;height:40px;border-radius:10px;object-fit:cover;flex-shrink:0}
+      .token-info{flex:1;min-width:0}
+      .token-name{font-size:14px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .token-ticker{font-size:12px;color:#6b7280}
+      .token-mcap{text-align:right;font-size:13px;font-weight:600;color:#9ca3af;white-space:nowrap}
+      .token-score{width:40px;text-align:center;font-size:14px;font-weight:800;flex-shrink:0}
+      .token-koth{display:inline-flex;padding:2px 8px;background:#eab30822;border:1px solid #eab30844;border-radius:6px;font-size:10px;font-weight:600;color:#eab308;margin-left:6px}
+      .token-expand{display:none;padding:12px 0 0;border-top:1px solid #1f2937;margin-top:12px}
+      .token-row.expanded .token-expand{display:block}
+
+      /* ─── SCORE COLORS ─── */
+      .score-high{color:#22c55f}
+      .score-mid{color:#eab308}
+      .score-low{color:#ef4444}
+
+      /* ─── INFO BOX ─── */
+      .info-box{padding:14px;background:#0c1929;border:1px solid #1e3a5f;border-radius:10px;margin-bottom:18px;font-size:12px;color:#93c5fd;line-height:1.6}
+
+      /* ─── REFRESH BAR ─── */
+      .refresh-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+      .refresh-bar .left{display:flex;align-items:center;gap:8px}
+      .refresh-bar .timer{font-size:12px;color:#6b7280}
+      .refresh-btn{padding:8px 16px;border-radius:8px;border:1px solid #374151;background:#1f2937;color:#9ca3af;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:6px}
+      .refresh-btn:hover{border-color:#22c55f;color:#22c55f}
+      .refresh-btn.spinning svg{animation:spin .6s linear infinite}
+
+      /* ─── LOADING ─── */
+      .loading{text-align:center;padding:48px 16px}
+      .loading .spinner-lg{width:40px;height:40px;border:3px solid #1f2937;border-top-color:#22c55f;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+      .loading p{font-size:14px;color:#6b7280}
+      @keyframes spin{to{transform:rotate(360deg)}}
+
+      /* ─── FOOTER ─── */
+      .footer{text-align:center;padding:32px 16px;font-size:12px;color:#4b5563;border-top:1px solid #1f2937;margin-top:60px}
+      .footer .links{display:flex;gap:16px;justify-content:center;margin-bottom:12px}
+
+      /* ─── RESPONSIVE ─── */
+      @media(max-width:600px){
+        .nav{padding:12px 16px;flex-wrap:wrap;gap:12px}
+        .nav-links{order:3;width:100%;justify-content:center}
+        .container{margin:20px auto}
+        .hero-top{flex-wrap:wrap}
+        .hero-score-ring{margin-left:0}
+        .hero-metrics{grid-template-columns:1fr 1fr}
+        .param-grid{grid-template-columns:1fr}
+        .token-mcap{display:none}
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav">
+      <a href="/" class="nav-logo"><img src="/logo.png" alt="" onerror="this.style.display='none'"/><span id="brandName">RichRichScrapes</span></a>
+      <div class="nav-links">
+        <a href="/trending">Trending</a>
+        <a href="/create-coin">Create Token</a>
+        <a href="/liquidity">Liquidity</a>
+        <a href="/bundle">Bundle</a>
+        <a href="/analyzer" class="active">Analyzer</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="card">
+        <h2>🎯 Rug Target Analyzer</h2>
+        <p class="subtitle">Scores trending coins against the exact parameters copy-ruggers use to pick targets. Higher score = higher rug copy risk.</p>
+        <div class="info-box">
+          This scanner runs the same filter stack rug copiers use: bonding curve position, coin age, market cap sweet spot, buy/sell pressure, holder count, KOTH status, and social buzz. It cross-references pump.fun trending data with DexScreener metrics to calculate a composite risk score. <strong>The #1 coin is the one most likely to be cloned right now.</strong>
+        </div>
+      </div>
+
+      <div class="refresh-bar">
+        <div class="left">
+          <span class="timer" id="timer">Auto-refresh in 60s</span>
+        </div>
+        <button class="refresh-btn" id="refreshBtn" onclick="runAnalysis()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+          Refresh
+        </button>
+      </div>
+
+      <!-- HERO: Top Target -->
+      <div id="heroSection" style="display:none"></div>
+
+      <!-- RANKED LIST -->
+      <div id="listSection">
+        <div class="loading" id="loadingState">
+          <div class="spinner-lg"></div>
+          <p>Scanning trending coins and cross-referencing DexScreener...</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="links">
+        <a id="ft-twitter" href="#" target="_blank">Twitter</a>
+        <a id="ft-discord" href="#" target="_blank">Discord</a>
+        <a id="ft-telegram" href="#" target="_blank">Telegram</a>
+      </div>
+      <span id="disclaimer"></span>
+    </footer>
+
+    <script>
+    // ═══════════════════════════════════════════════════════════
+    // ─── CONFIG & STATE ──────────────────────────────────────
+    // ═══════════════════════════════════════════════════════════
+    let analysisResults = [];
+    let countdown = 60;
+    let countdownInterval = null;
+    let isRunning = false;
+
+    // footer wiring
+    document.getElementById('brandName').textContent = window.project_name || 'RichRichScrapes';
+    document.getElementById('ft-twitter').href = window.footer_twitter || '#';
+    document.getElementById('ft-discord').href = window.footer_discord || '#';
+    document.getElementById('ft-telegram').href = window.footer_telegram || '#';
+    document.getElementById('disclaimer').textContent = window.disclaimer || '';
+
+    // ═══════════════════════════════════════════════════════════
+    // ─── SCORING ENGINE ──────────────────────────────────────
+    // ═══════════════════════════════════════════════════════════
+
+    function scoreAge(createdTimestamp) {
+      const ageMs = Date.now() - createdTimestamp;
+      const ageHours = ageMs / (1000 * 60 * 60);
+      if (ageHours <= 1) return { score: 15, label: formatAge(ageMs), grade: 'green' };
+      if (ageHours <= 2) return { score: 14, label: formatAge(ageMs), grade: 'green' };
+      if (ageHours <= 4) return { score: 11, label: formatAge(ageMs), grade: 'green' };
+      if (ageHours <= 6) return { score: 8, label: formatAge(ageMs), grade: 'yellow' };
+      if (ageHours <= 12) return { score: 4, label: formatAge(ageMs), grade: 'yellow' };
+      return { score: 0, label: formatAge(ageMs), grade: 'red' };
+    }
+
+    function scoreMarketCap(mcap) {
+      // Sweet spot: $80K-$500K
+      if (mcap >= 80000 && mcap <= 500000) {
+        // Peak at $150K-$300K
+        if (mcap >= 150000 && mcap <= 300000) return { score: 15, label: '$' + fmtNum(mcap), grade: 'green' };
+        return { score: 12, label: '$' + fmtNum(mcap), grade: 'green' };
+      }
+      if (mcap >= 50000 && mcap < 80000) return { score: 6, label: '$' + fmtNum(mcap), grade: 'yellow' };
+      if (mcap > 500000 && mcap <= 1000000) return { score: 5, label: '$' + fmtNum(mcap), grade: 'yellow' };
+      return { score: 0, label: '$' + fmtNum(mcap), grade: 'red' };
+    }
+
+    function scoreBuySellRatio(buys, sells) {
+      if (!sells || sells === 0) {
+        if (buys > 10) return { score: 15, label: buys + ':0 (all buys)', grade: 'green' };
+        return { score: 5, label: 'No sells yet', grade: 'yellow' };
+      }
+      const ratio = buys / sells;
+      if (ratio >= 4) return { score: 15, label: ratio.toFixed(1) + ':1', grade: 'green' };
+      if (ratio >= 3) return { score: 13, label: ratio.toFixed(1) + ':1', grade: 'green' };
+      if (ratio >= 2) return { score: 8, label: ratio.toFixed(1) + ':1', grade: 'yellow' };
+      if (ratio >= 1.5) return { score: 4, label: ratio.toFixed(1) + ':1', grade: 'yellow' };
+      return { score: 0, label: ratio.toFixed(1) + ':1', grade: 'red' };
+    }
+
+    function scoreHolders(holders) {
+      if (holders >= 300) return { score: 10, label: holders.toLocaleString(), grade: 'green' };
+      if (holders >= 200) return { score: 9, label: holders.toLocaleString(), grade: 'green' };
+      if (holders >= 100) return { score: 6, label: holders.toLocaleString(), grade: 'yellow' };
+      if (holders >= 50) return { score: 3, label: holders.toLocaleString(), grade: 'yellow' };
+      return { score: 0, label: holders.toLocaleString(), grade: 'red' };
+    }
+
+    function scoreKOTH(isKOTH, isTrending) {
+      if (isKOTH) return { score: 10, label: '👑 KOTH', grade: 'green' };
+      if (isTrending) return { score: 7, label: 'Trending', grade: 'yellow' };
+      return { score: 0, label: 'Not trending', grade: 'red' };
+    }
+
+    function scoreVolume(vol5m, liquidity) {
+      // High volume relative to liquidity = strong momentum
+      if (!liquidity || liquidity === 0) return { score: 5, label: '$' + fmtNum(vol5m || 0), grade: 'yellow' };
+      const ratio = (vol5m || 0) / liquidity;
+      if (ratio >= 0.5) return { score: 10, label: '$' + fmtNum(vol5m), grade: 'green' };
+      if (ratio >= 0.2) return { score: 7, label: '$' + fmtNum(vol5m), grade: 'green' };
+      if (ratio >= 0.1) return { score: 4, label: '$' + fmtNum(vol5m), grade: 'yellow' };
+      return { score: 1, label: '$' + fmtNum(vol5m || 0), grade: 'red' };
+    }
+
+    function scorePriceAction(priceChange5m, priceChange1h) {
+      // Consistent green = organic interest
+      let pts = 0;
+      if (priceChange5m > 5) pts += 5;
+      else if (priceChange5m > 0) pts += 3;
+      if (priceChange1h > 20) pts += 5;
+      else if (priceChange1h > 5) pts += 3;
+      else if (priceChange1h > 0) pts += 1;
+      const label = (priceChange5m >= 0 ? '+' : '') + (priceChange5m || 0).toFixed(1) + '% (5m)';
+      const grade = pts >= 7 ? 'green' : pts >= 4 ? 'yellow' : 'red';
+      return { score: pts, label, grade };
+    }
+
+    function scoreSocialBuzz(replyCount, hasTwitter, hasTelegram) {
+      let pts = 0;
+      if (replyCount >= 50) pts += 6;
+      else if (replyCount >= 20) pts += 4;
+      else if (replyCount >= 5) pts += 2;
+      if (hasTwitter) pts += 2;
+      if (hasTelegram) pts += 2;
+      const label = replyCount + ' replies' + (hasTwitter ? ' + X' : '') + (hasTelegram ? ' + TG' : '');
+      const grade = pts >= 7 ? 'green' : pts >= 3 ? 'yellow' : 'red';
+      return { score: pts, label, grade };
+    }
+
+    function scoreLiquidity(liq) {
+      // Copy ruggers want LOW liquidity on the original so the copy looks comparable
+      // But they need ENOUGH that the original is legitimate
+      // Sweet spot: $5K-$50K liquidity
+      if (!liq) return { score: 3, label: 'Unknown', grade: 'yellow' };
+      if (liq >= 5000 && liq <= 50000) return { score: 10, label: '$' + fmtNum(liq), grade: 'green' };
+      if (liq >= 2000 && liq < 5000) return { score: 6, label: '$' + fmtNum(liq), grade: 'yellow' };
+      if (liq > 50000 && liq <= 100000) return { score: 5, label: '$' + fmtNum(liq), grade: 'yellow' };
+      return { score: 2, label: '$' + fmtNum(liq), grade: 'red' };
+    }
+
+    const PARAMS = [
+      { key: 'age', name: 'Coin Age', max: 15, desc: 'Under 2h ideal, under 6h acceptable' },
+      { key: 'mcap', name: 'Market Cap', max: 15, desc: '$80K–$500K sweet spot' },
+      { key: 'buySell', name: 'Buy:Sell Ratio', max: 15, desc: '3:1 or better = heavy one-directional pressure' },
+      { key: 'holders', name: 'Holder Count', max: 10, desc: '200+ = name spreading organically' },
+      { key: 'koth', name: 'KOTH / Trending', max: 10, desc: 'Front page or King of the Hill' },
+      { key: 'volume', name: '5m Volume', max: 10, desc: 'High volume relative to liquidity = momentum' },
+      { key: 'priceAction', name: 'Price Action', max: 10, desc: 'Consistent green candles = organic interest' },
+      { key: 'social', name: 'Social Buzz', max: 10, desc: 'CT discussion, Twitter, Telegram activity' },
+      { key: 'liquidity', name: 'Liquidity Level', max: 10, desc: '$5K–$50K range makes the copy look comparable' },
+    ];
+    const MAX_SCORE = PARAMS.reduce((a, p) => a + p.max, 0);
+
+    // ═══════════════════════════════════════════════════════════
+    // ─── DATA FETCHING ───────────────────────────────────────
+    // ═══════════════════════════════════════════════════════════
+
+    async function fetchTrending() {
+      const res = await fetch(window.trending_api);
+      if (!res.ok) throw new Error('Trending API failed');
+      return res.json();
+    }
+
+    async function fetchDexScreener(mintAddress) {
+      try {
+        const res = await fetch('https://api.dexscreener.com/tokens/v1/solana/' + mintAddress);
+        if (!res.ok) return null;
+        const data = await res.json();
+        // Return the first pair (highest liquidity)
+        if (Array.isArray(data) && data.length > 0) {
+          // Sort by liquidity, pick the main pair
+          data.sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
+          return data[0];
+        }
+        return null;
+      } catch (e) {
+        console.warn('DexScreener fetch failed for', mintAddress, e);
+        return null;
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ─── ANALYSIS PIPELINE ───────────────────────────────────
+    // ═══════════════════════════════════════════════════════════
+
+    async function runAnalysis() {
+      if (isRunning) return;
+      isRunning = true;
+      const btn = document.getElementById('refreshBtn');
+      btn.classList.add('spinning');
+
+      document.getElementById('heroSection').style.display = 'none';
+      document.getElementById('listSection').innerHTML = '<div class="loading" id="loadingState"><div class="spinner-lg"></div><p>Scanning trending coins and cross-referencing DexScreener...</p></div>';
+
+      try {
+        const tokens = await fetchTrending();
+        if (!tokens || tokens.length === 0) {
+          document.getElementById('listSection').innerHTML = '<div class="card"><p style="color:#6b7280;text-align:center">No trending tokens found. Try again in a moment.</p></div>';
+          isRunning = false;
+          btn.classList.remove('spinning');
+          return;
+        }
+
+        // Determine KOTH
+        const kothTimestamp = Math.max(...tokens.map(t => t.king_of_the_hill_timestamp || 0));
+
+        // Fetch DexScreener data for all tokens in parallel (batched)
+        const dexPromises = tokens.map(t => fetchDexScreener(t.mint));
+        const dexResults = await Promise.allSettled(dexPromises);
+
+        // Score each token
+        analysisResults = tokens.map((token, i) => {
+          const dex = dexResults[i].status === 'fulfilled' ? dexResults[i].value : null;
+          const isKOTH = token.king_of_the_hill_timestamp === kothTimestamp;
+
+          // Extract DexScreener metrics
+          const buys5m = dex?.txns?.m5?.buys || 0;
+          const sells5m = dex?.txns?.m5?.sells || 0;
+          const buys1h = dex?.txns?.h1?.buys || 0;
+          const sells1h = dex?.txns?.h1?.sells || 0;
+          const totalBuys = buys1h || buys5m;
+          const totalSells = sells1h || sells5m;
+          const vol5m = dex?.volume?.m5 || 0;
+          const liquidity = dex?.liquidity?.usd || 0;
+          const priceChange5m = dex?.priceChange?.m5 || 0;
+          const priceChange1h = dex?.priceChange?.h1 || 0;
+          const holders = dex?.holders || 0;
+
+          // Calculate created timestamp from last_trade or koth
+          const createdTs = token.created_timestamp || token.king_of_the_hill_timestamp || (Date.now() - 3600000);
+
+          // Score each parameter
+          const scores = {
+            age: scoreAge(createdTs),
+            mcap: scoreMarketCap(token.usd_market_cap || 0),
+            buySell: scoreBuySellRatio(totalBuys, totalSells),
+            holders: scoreHolders(holders),
+            koth: scoreKOTH(isKOTH, true),
+            volume: scoreVolume(vol5m, liquidity),
+            priceAction: scorePriceAction(priceChange5m, priceChange1h),
+            social: scoreSocialBuzz(token.reply_count || 0, !!token.twitter, !!token.telegram),
+            liquidity: scoreLiquidity(liquidity),
+          };
+
+          const totalScore = Object.values(scores).reduce((a, s) => a + s.score, 0);
+          const pct = Math.round((totalScore / MAX_SCORE) * 100);
+
+          return {
+            token,
+            dex,
+            scores,
+            totalScore,
+            pct,
+            isKOTH,
+            mcap: token.usd_market_cap || 0,
+            liquidity,
+          };
+        });
+
+        // Sort by score descending
+        analysisResults.sort((a, b) => b.totalScore - a.totalScore);
+
+        // Render
+        renderHero(analysisResults[0]);
+        renderList(analysisResults);
+
+      } catch (e) {
+        console.error('Analysis error:', e);
+        document.getElementById('listSection').innerHTML = '<div class="card"><p style="color:#fca5a5;text-align:center">Error fetching data: ' + e.message + '. Try refreshing.</p></div>';
+      }
+
+      isRunning = false;
+      btn.classList.remove('spinning');
+      resetCountdown();
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ─── RENDERING ───────────────────────────────────────────
+    // ═══════════════════════════════════════════════════════════
+
+    function renderHero(result) {
+      const el = document.getElementById('heroSection');
+      const r = result;
+      const t = r.token;
+
+      const circumference = 2 * Math.PI * 30;
+      const offset = circumference - (r.pct / 100) * circumference;
+      const ringColor = r.pct >= 70 ? '#22c55f' : r.pct >= 40 ? '#eab308' : '#ef4444';
+
+      let html = '<div class="hero-card">';
+      html += '<div class="hero-badge"><span class="pulse"></span>HIGHEST RUG COPY RISK</div>';
+      html += '<div class="hero-top">';
+      html += '<img class="hero-img" src="' + (t.image_uri || '') + '" alt="" onerror="this.style.display=\'none\'"/>';
+      html += '<div>';
+      html += '<div class="hero-name">' + esc(t.name) + (r.isKOTH ? ' <span class="token-koth">👑 KOTH</span>' : '') + '</div>';
+      html += '<div class="hero-ticker">$' + esc(t.symbol) + '</div>';
+      html += '</div>';
+      html += '<div class="hero-score-ring">';
+      html += '<svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="30" fill="none" stroke="#1f2937" stroke-width="5"/>';
+      html += '<circle cx="36" cy="36" r="30" fill="none" stroke="' + ringColor + '" stroke-width="5" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + offset + '" stroke-linecap="round"/></svg>';
+      html += '<div class="score-text">' + r.pct + '</div>';
+      html += '</div></div>';
+
+      // Metric grid
+      html += '<div class="hero-metrics">';
+      for (const p of PARAMS) {
+        const s = r.scores[p.key];
+        html += '<div class="hero-metric"><div class="label">' + p.name + '</div>';
+        html += '<div class="value ' + s.grade + '">' + esc(s.label) + ' <span style="opacity:.5;font-size:10px">(' + s.score + '/' + p.max + ')</span></div></div>';
+      }
+      html += '</div>';
+
+      // Param bars
+      html += '<div class="param-grid">';
+      for (const p of PARAMS) {
+        const s = r.scores[p.key];
+        const pctFill = Math.round((s.score / p.max) * 100);
+        const barColor = s.grade === 'green' ? '#22c55f' : s.grade === 'yellow' ? '#eab308' : '#ef4444';
+        html += '<div class="param-bar"><div class="param-header"><span class="param-name">' + p.name + '</span>';
+        html += '<span class="param-pts" style="color:' + barColor + '">' + s.score + '/' + p.max + '</span></div>';
+        html += '<div class="bar-track"><div class="bar-fill" style="width:' + pctFill + '%;background:' + barColor + '"></div></div></div>';
+      }
+      html += '</div>';
+
+      // Links
+      html += '<div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">';
+      html += '<a href="https://pump.fun/coin/' + t.mint + '" target="_blank" style="padding:8px 14px;background:#1f2937;border-radius:8px;font-size:12px;font-weight:600;color:#fff">View on Pump.fun ↗</a>';
+      html += '<a href="https://dexscreener.com/solana/' + t.mint + '" target="_blank" style="padding:8px 14px;background:#1f2937;border-radius:8px;font-size:12px;font-weight:600;color:#fff">DexScreener ↗</a>';
+      if (t.twitter) html += '<a href="' + esc(t.twitter) + '" target="_blank" style="padding:8px 14px;background:#1f2937;border-radius:8px;font-size:12px;font-weight:600;color:#9ca3af">Twitter ↗</a>';
+      if (t.telegram) html += '<a href="' + esc(t.telegram) + '" target="_blank" style="padding:8px 14px;background:#1f2937;border-radius:8px;font-size:12px;font-weight:600;color:#9ca3af">Telegram ↗</a>';
+      html += '</div>';
+
+      html += '</div>';
+      el.innerHTML = html;
+      el.style.display = 'block';
+    }
+
+    function renderList(results) {
+      const el = document.getElementById('listSection');
+      if (results.length <= 1) {
+        el.innerHTML = '<div class="card"><p style="color:#6b7280;text-align:center;font-size:13px">Only one trending coin found. More will appear as the market heats up.</p></div>';
+        return;
+      }
+
+      let html = '<div style="margin-bottom:8px;font-size:13px;color:#6b7280;font-weight:500">All Trending Coins — Ranked by Copy Risk</div>';
+
+      results.forEach((r, i) => {
+        const t = r.token;
+        const scoreClass = r.pct >= 70 ? 'score-high' : r.pct >= 40 ? 'score-mid' : 'score-low';
+        const rankClass = i < 3 ? 'top3' : '';
+
+        html += '<div class="token-row" onclick="toggleExpand(this)" data-idx="' + i + '">';
+        html += '<div class="token-rank ' + rankClass + '">' + (i + 1) + '</div>';
+        html += '<img class="token-img" src="' + (t.image_uri || '') + '" alt="" onerror="this.style.display=\'none\'"/>';
+        html += '<div class="token-info"><div class="token-name">' + esc(t.name) + (r.isKOTH ? ' <span class="token-koth">👑</span>' : '') + '</div>';
+        html += '<div class="token-ticker">$' + esc(t.symbol) + '</div></div>';
+        html += '<div class="token-mcap">$' + fmtNum(r.mcap) + '</div>';
+        html += '<div class="token-score ' + scoreClass + '">' + r.pct + '</div>';
+
+        // Expandable detail
+        html += '<div class="token-expand"><div class="param-grid">';
+        for (const p of PARAMS) {
+          const s = r.scores[p.key];
+          const pctFill = Math.round((s.score / p.max) * 100);
+          const barColor = s.grade === 'green' ? '#22c55f' : s.grade === 'yellow' ? '#eab308' : '#ef4444';
+          html += '<div class="param-bar"><div class="param-header"><span class="param-name">' + p.name + ': ' + esc(s.label) + '</span>';
+          html += '<span class="param-pts" style="color:' + barColor + '">' + s.score + '/' + p.max + '</span></div>';
+          html += '<div class="bar-track"><div class="bar-fill" style="width:' + pctFill + '%;background:' + barColor + '"></div></div></div>';
+        }
+        html += '</div>';
+        html += '<div style="display:flex;gap:6px;margin-top:10px">';
+        html += '<a href="https://pump.fun/coin/' + t.mint + '" target="_blank" style="padding:6px 12px;background:#1f2937;border-radius:6px;font-size:11px;font-weight:600;color:#9ca3af">Pump.fun ↗</a>';
+        html += '<a href="https://dexscreener.com/solana/' + t.mint + '" target="_blank" style="padding:6px 12px;background:#1f2937;border-radius:6px;font-size:11px;font-weight:600;color:#9ca3af">DexScreener ↗</a>';
+        html += '</div></div>';
+
+        html += '</div>';
+      });
+
+      el.innerHTML = html;
+    }
+
+    function toggleExpand(el) {
+      el.classList.toggle('expanded');
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ─── UTILITIES ───────────────────────────────────────────
+    // ═══════════════════════════════════════════════════════════
+
+    function fmtNum(n) {
+      if (n >= 1000000) return (n / 1000000).toFixed(2) + 'M';
+      if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+      return n.toFixed(0);
+    }
+
+    function formatAge(ms) {
+      const mins = Math.floor(ms / 60000);
+      if (mins < 60) return mins + 'm ago';
+      const hrs = Math.floor(mins / 60);
+      const remMins = mins % 60;
+      if (hrs < 24) return hrs + 'h ' + remMins + 'm ago';
+      return Math.floor(hrs / 24) + 'd ' + (hrs % 24) + 'h ago';
+    }
+
+    function esc(s) {
+      if (!s) return '';
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function resetCountdown() {
+      countdown = 60;
+      if (countdownInterval) clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        countdown--;
+        document.getElementById('timer').textContent = 'Auto-refresh in ' + countdown + 's';
+        if (countdown <= 0) {
+          runAnalysis();
+        }
+      }, 1000);
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ─── BOOT ────────────────────────────────────────────────
+    // ═══════════════════════════════════════════════════════════
+
+    runAnalysis();
+    </script>
+  </body>
+</html>

@@ -9,6 +9,10 @@
       "destination": "/liquidity.html"
     },
     {
+      "source": "/analyzer",
+      "destination": "/analyzer.html"
+    },
+    {
       "source": "/trending",
       "destination": "/trending.html"
     },
