@@ -160,10 +160,10 @@ function log(msg, cls) {
 // ── PUMP.FUN FETCH WITH CORS FALLBACK ──
 // pump.fun's frontend-api doesn't send Access-Control-Allow-Origin, so a direct
 // browser fetch gets blocked. Try direct first (works fine from a server/extension
-// context, or if pump.fun ever opens it up), then fall back to a public CORS
-// proxy so this still works as a plain static HTML file with no backend.
+// context, or if pump.fun ever opens it up), then walk a chain of fallbacks so
+// no single flaky free proxy can take this source down.
 let pumpFunDirectDead = false; // once direct fails once, stop wasting a round-trip retrying it
-const WORKER_PROXY = window.workerProxy || ''; // e.g. 'https://golden-window-proxy.YOURNAME.workers.dev'
+const WORKER_PROXY = window.workerProxy || ''; // e.g. 'https://golden-window-proxy.YOURNAME.workers.dev' — set this in config.js once deployed, skipped entirely if empty
 async function fetchPumpFun(url) {
   if (!pumpFunDirectDead) {
     try {
@@ -173,15 +173,22 @@ async function fetchPumpFun(url) {
       pumpFunDirectDead = true; // TypeError "Failed to fetch" = CORS block
     }
   }
-  // Fallback: your own Cloudflare Worker if configured (fast, private,
-  // edge-cached), else the public corsproxy.io as a last resort.
-  try {
-    const proxied = WORKER_PROXY
-      ? WORKER_PROXY + '/?url=' + encodeURIComponent(url)
-      : 'https://corsproxy.io/?url=' + encodeURIComponent(url);
-    const r2 = await fetch(proxied);
-    if (r2.ok) return r2;
-  } catch(e) {}
+
+  // Build the fallback chain. Your own Worker (if configured) goes first —
+  // it's yours alone, not rate-limited by strangers. Then two independent
+  // public proxies as backup, so one of them being down/rate-limited on a
+  // given day doesn't zero out this whole seed source.
+  const attempts = [];
+  if (WORKER_PROXY) attempts.push(WORKER_PROXY + '/?url=' + encodeURIComponent(url));
+  attempts.push('https://corsproxy.io/?url=' + encodeURIComponent(url));
+  attempts.push('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+
+  for (const proxied of attempts) {
+    try {
+      const r2 = await fetch(proxied);
+      if (r2.ok) return r2;
+    } catch(e) {}
+  }
   return null;
 }
 
@@ -252,7 +259,7 @@ async function seedTokens() {
     (async () => {
       try {
         const r = await fetchPumpFun('https://frontend-api-v2.pump.fun/coins/currently-live?limit=50&offset=0&includeNsfw=false');
-        if (!r) { log('pump.fun API unreachable (direct + proxy both failed) — using DexScreener + WebSocket', 'err'); return; }
+        if (!r) { log('pump.fun direct list unavailable (non-fatal) — DexScreener + WebSocket already covering seeding', 'info'); return; }
         const coins = await r.json();
         let ct = 0;
         if (Array.isArray(coins)) {
