@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('nb').textContent = window.project_name || 'Token Creator';
   connectWS();
   seedTokens();
-  setInterval(scanBatch, 4000); // bulk RPC call is cheap — refresh every 4s instead of 12s
+  setInterval(scanBatch, 2000); // bulk RPC call is cheap — one call covers up to 100 tokens/chunk regardless of interval
 });
 
 // ── WEBSOCKET — PumpPortal ──
@@ -351,13 +351,20 @@ async function scanBatch() {
     scanned += curvesRead;
     log('Scanned ' + curvesRead + '/' + toScan.length + ' curves in 1 bulk call, ' + inRange + ' in near range');
 
-    // Fetch DexScreener data for anything with bondPct > 30%
+    // Fetch DexScreener data for anything with bondPct > 30% — chunked in
+    // parallel (endpoint caps at ~30 mints/call) so nothing past the 30th
+    // candidate silently goes unchecked. Previously this was a hard
+    // slice(0,30): if more than 30 tokens were near the zone at once, the
+    // rest never got mcap/holders/ratio data and could never match, ever,
+    // with zero indication it was happening.
     const dexMints = [];
     for (const [mint, t] of tracked) {
       if (t.bondPct !== null && t.bondPct >= 30) dexMints.push(mint);
     }
     if (dexMints.length > 0) {
-      await fetchDexData(dexMints.slice(0, 30));
+      const chunks = [];
+      for (let i = 0; i < dexMints.length; i += 30) chunks.push(dexMints.slice(i, i + 30));
+      await Promise.all(chunks.map(c => fetchDexData(c)));
     }
 
     evaluateMatches();
