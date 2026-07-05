@@ -16,10 +16,7 @@
     .links{display:flex;gap:6px;align-items:center}
     .links a{color:#666;text-decoration:none;font-size:14px;padding:7px 13px;border-radius:7px;font-weight:500}
     .links a:hover,.links a.active{color:#fff;background:#1a1a1a}
-
     .ctn{max-width:1100px;margin:0 auto;padding:20px}
-
-    /* HEADER */
     .scanner-hdr{padding:16px 0 12px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px}
     .scanner-hdr h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
     .scanner-hdr h1 em{font-style:normal;color:#22c55f}
@@ -27,21 +24,15 @@
     .live-dot{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#22c55f;font-weight:600;padding:5px 12px;background:rgba(34,197,95,.08);border:1px solid rgba(34,197,95,.15);border-radius:20px}
     .live-dot::before{content:'';width:7px;height:7px;background:#22c55f;border-radius:50%;animation:pulse 1.5s infinite}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-    /* CRITERIA BAR */
     .criteria{display:flex;flex-wrap:wrap;gap:8px;padding:12px 0;border-bottom:1px solid #1a1a1a;margin-bottom:16px}
     .crit{display:flex;align-items:center;gap:5px;padding:5px 11px;background:#161616;border:1px solid #222;border-radius:7px;font-size:11px;color:#888}
     .crit strong{color:#ccc;font-weight:600}
     .crit .val{color:#22c55f;font-weight:600}
-
-    /* STATS ROW */
     .stats{display:flex;gap:16px;margin-bottom:16px}
     .stat{background:#161616;border:1px solid #222;border-radius:9px;padding:10px 14px;flex:1;text-align:center}
     .stat .n{font-size:20px;font-weight:700;color:#fff}
     .stat .l{font-size:11px;color:#666;margin-top:2px}
     .stat .n.green{color:#22c55f}
-
-    /* TOKEN GRID */
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
     .tcard{background:#161616;border:1px solid #222;border-radius:12px;padding:16px;transition:border-color .2s}
     .tcard:hover{border-color:#333}
@@ -50,15 +41,13 @@
     .tcard .sym{color:#22c55f;font-size:12px;font-weight:600;margin-top:1px}
     .tcard .age{font-size:11px;color:#888;text-align:right}
     .tcard .age strong{color:#ccc;display:block;font-size:13px}
-    /* BONDING BAR */
     .bbar{height:20px;background:#1a1a1a;border-radius:5px;overflow:hidden;position:relative;margin-bottom:10px}
     .bbar .fill{height:100%;border-radius:5px;transition:width .5s;position:relative}
     .bbar .fill.hot{background:linear-gradient(90deg,#f59e0b,#22c55f)}
-    .bbar .fill.cold{background:#333}
+    .bbar .fill.cold{background:#555}
     .bbar .fill.fire{background:linear-gradient(90deg,#22c55f,#ef4444)}
     .bbar .pct{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
     .bbar .zone{position:absolute;left:45%;width:30%;height:100%;border-left:1px dashed rgba(34,197,95,.3);border-right:1px dashed rgba(34,197,95,.3);top:0;pointer-events:none}
-    /* METRICS */
     .metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
     .met{background:#111;border-radius:6px;padding:7px 9px;text-align:center}
     .met .v{font-size:14px;font-weight:700;color:#fff}
@@ -66,28 +55,23 @@
     .met .v.warn{color:#f59e0b}
     .met .v.bad{color:#ef4444}
     .met .k{font-size:10px;color:#555;margin-top:1px}
-    /* ACTIONS */
     .tcard .acts{display:flex;gap:6px;margin-top:8px}
     .tcard .acts a{flex:1;padding:6px;text-align:center;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;color:#888;background:#111;border:1px solid #222;transition:all .2s}
     .tcard .acts a:hover{color:#fff;border-color:#333}
     .tcard .acts a.buy{color:#22c55f;border-color:rgba(34,197,95,.2)}
     .tcard .acts a.buy:hover{background:rgba(34,197,95,.08)}
-
-    /* EMPTY STATE */
     .empty{text-align:center;padding:60px 20px;color:#444}
     .empty h2{font-size:18px;color:#666;margin-bottom:6px}
     .empty p{font-size:13px;line-height:1.6}
     .empty .spn{width:32px;height:32px;border:3px solid #222;border-top-color:#22c55f;border-radius:50%;animation:sp .7s linear infinite;margin:0 auto 12px}
     @keyframes sp{to{transform:rotate(360deg)}}
-
-    /* LOG */
     .log{margin-top:20px;border-top:1px solid #1a1a1a;padding-top:12px}
     .log h3{font-size:12px;color:#444;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
-    .log-entries{max-height:120px;overflow-y:auto;font-family:monospace;font-size:11px;color:#444;line-height:1.7}
+    .log-entries{max-height:180px;overflow-y:auto;font-family:monospace;font-size:11px;color:#444;line-height:1.7}
     .log-entries .entry{padding:1px 0}
-    .log-entries .entry.match{color:#22c55f}
-    .log-entries .entry.skip{color:#333}
-
+    .log-entries .match{color:#22c55f}
+    .log-entries .err{color:#ef4444}
+    .log-entries .info{color:#3b82f6}
     .hidden{display:none!important}
     @media(max-width:700px){.grid{grid-template-columns:1fr}.stats{flex-wrap:wrap}.stat{min-width:calc(50% - 8px)}.scanner-hdr{flex-direction:column}.criteria{flex-direction:column}}
   </style>
@@ -101,276 +85,358 @@
     <a href="/liquidity">Liquidity</a>
   </div>
 </div>
-
 <div class="ctn">
   <div class="scanner-hdr">
     <div>
       <h1><em>Golden Window</em> Scanner</h1>
-      <p>Real-time pump.fun tokens in the bonding curve sweet spot. Streams new tokens via PumpPortal, reads bonding curves on-chain, pulls buy/sell from DexScreener.</p>
+      <p>Real-time pump.fun tokens in the bonding curve sweet spot. Reads curves on-chain, pulls buy/sell from DexScreener.</p>
     </div>
     <div class="live-dot" id="wsStatus">Connecting</div>
   </div>
-
   <div class="criteria">
-    <div class="crit"><strong>Bonding Curve</strong><span class="val">45–75%</span></div>
-    <div class="crit"><strong>Age</strong><span class="val">&lt; 4 hours</span></div>
+    <div class="crit"><strong>Bonding</strong><span class="val">45–75%</span></div>
+    <div class="crit"><strong>Age</strong><span class="val">&lt; 4h</span></div>
     <div class="crit"><strong>Holders</strong><span class="val">150–500</span></div>
-    <div class="crit"><strong>Buy:Sell (30m)</strong><span class="val">4:1+</span></div>
+    <div class="crit"><strong>Buy:Sell</strong><span class="val">4:1+</span></div>
   </div>
-
   <div class="stats">
-    <div class="stat"><div class="n" id="sTracking">0</div><div class="l">Tracking</div></div>
-    <div class="stat"><div class="n green" id="sMatches">0</div><div class="l">Matches</div></div>
-    <div class="stat"><div class="n" id="sScanned">0</div><div class="l">Scanned</div></div>
-    <div class="stat"><div class="n" id="sAge">—</div><div class="l">Avg Age (min)</div></div>
+    <div class="stat"><div class="n" id="sTrack">0</div><div class="l">Tracking</div></div>
+    <div class="stat"><div class="n green" id="sMatch">0</div><div class="l">Matches</div></div>
+    <div class="stat"><div class="n" id="sScan">0</div><div class="l">Curves Read</div></div>
+    <div class="stat"><div class="n" id="sAvg">—</div><div class="l">Avg Bond %</div></div>
   </div>
-
   <div id="tokenGrid" class="grid"></div>
-
   <div id="emptyState" class="empty">
     <div class="spn"></div>
     <h2>Scanning for golden window tokens</h2>
-    <p>Streaming new pump.fun tokens and checking bonding curves on-chain.<br/>Matches appear here automatically when tokens hit 45–75% with momentum.</p>
+    <p>Streaming pump.fun tokens and reading bonding curves on-chain.<br/>Tokens appear when they enter the 45–75% bonding range with momentum.</p>
   </div>
-
   <div class="log">
     <h3>Scanner Log</h3>
-    <div id="logEntries" class="log-entries"></div>
+    <div id="logEl" class="log-entries"></div>
   </div>
 </div>
 
 <script>
-const PUMP_PROGRAM = '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P';
-const INITIAL_REAL_TOKEN_RESERVES = 793100000000000n;
+const PUMP_PROGRAM = new solanaWeb3.PublicKey('6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P');
+const INITIAL_RESERVES = 793100000000000n;
 const RPC = window.rpc || 'https://api.mainnet-beta.solana.com';
 const conn = new solanaWeb3.Connection(RPC, 'confirmed');
 
-// STATE
-const tracked = new Map(); // mint → {name, symbol, created, bondPct, age, buys, sells, holders, lastCheck}
+const tracked = new Map();
 const matches = new Map();
-let totalScanned = 0;
+let scanned = 0;
 let ws = null;
-let scanInterval = null;
 
+// ── HELPERS ──
+function readU64LE(buf, offset) {
+  // Works on both Buffer and Uint8Array (browser-safe)
+  const lo = (buf[offset]) | (buf[offset+1] << 8) | (buf[offset+2] << 16) | (buf[offset+3] << 24);
+  const hi = (buf[offset+4]) | (buf[offset+5] << 8) | (buf[offset+6] << 16) | (buf[offset+7] << 24);
+  return BigInt(lo >>> 0) | (BigInt(hi >>> 0) << 32n);
+}
+
+function fmtNum(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(1)+'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1)+'K';
+  return Math.round(n).toString();
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function log(msg, cls) {
+  const el = document.getElementById('logEl');
+  const ts = new Date().toLocaleTimeString();
+  el.innerHTML = `<div class="entry ${cls||''}">[${ts}] ${msg}</div>` + el.innerHTML;
+  while (el.children.length > 80) el.removeChild(el.lastChild);
+}
+
+// ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('nb').textContent = window.project_name || 'Token Creator';
-  document.title = (window.project_name || 'Scanner') + ' | Golden Window Scanner';
   connectWS();
-  seedFromDexScreener();
-  scanInterval = setInterval(scanAll, 20000); // scan every 20s
+  seedTokens();
+  setInterval(scanBatch, 12000);
 });
 
-// ── PUMPPORTAL WEBSOCKET ──
+// ── WEBSOCKET — PumpPortal ──
 function connectWS() {
   try {
     ws = new WebSocket('wss://pumpportal.fun/api/data');
     ws.onopen = () => {
       document.getElementById('wsStatus').textContent = 'Live';
-      log('WebSocket connected to PumpPortal');
+      log('WebSocket connected to PumpPortal', 'info');
       ws.send(JSON.stringify({ method: 'subscribeNewToken' }));
     };
     ws.onmessage = (e) => {
       try {
         const d = JSON.parse(e.data);
         if (d.mint && d.name) {
-          addToken(d.mint, d.name, d.symbol || '???', Date.now());
+          addToken(d.mint, d.name, d.symbol || '???', Date.now(), d.uri || '');
+          log('New token: ' + (d.symbol||d.name) + ' ' + d.mint.slice(0,8) + '...');
         }
       } catch(err) {}
     };
     ws.onclose = () => {
       document.getElementById('wsStatus').textContent = 'Reconnecting';
-      log('WebSocket disconnected, reconnecting in 5s...');
+      log('WebSocket closed, retrying in 5s...', 'err');
       setTimeout(connectWS, 5000);
     };
     ws.onerror = () => {};
   } catch(e) {
-    log('WebSocket error: ' + e.message);
     setTimeout(connectWS, 10000);
   }
 }
 
-// ── SEED FROM DEXSCREENER ──
-async function seedFromDexScreener() {
-  log('Fetching recent pump.fun tokens from DexScreener...');
-  try {
-    const res = await fetch('https://api.dexscreener.com/latest/dex/search?q=pump');
-    if (!res.ok) throw new Error('DexScreener fetch failed');
-    const data = await res.json();
-    let added = 0;
-    if (data.pairs) {
-      for (const pair of data.pairs) {
-        if (pair.chainId === 'solana' && pair.baseToken && pair.baseToken.address) {
-          const addr = pair.baseToken.address;
-          if (addr.toLowerCase().endsWith('pump') && !tracked.has(addr)) {
-            const created = pair.pairCreatedAt || Date.now();
-            addToken(addr, pair.baseToken.name || 'Unknown', pair.baseToken.symbol || '???', created);
-            added++;
-          }
+// ── SEED from multiple sources ──
+async function seedTokens() {
+  // Source 1: DexScreener — multiple search queries for pump.fun tokens
+  const queries = ['pump.fun', 'solana pump', 'pumpfun'];
+  for (const q of queries) {
+    try {
+      const r = await fetch('https://api.dexscreener.com/latest/dex/search?q=' + encodeURIComponent(q));
+      if (!r.ok) continue;
+      const data = await r.json();
+      let ct = 0;
+      if (data.pairs) {
+        for (const p of data.pairs) {
+          if (p.chainId !== 'solana') continue;
+          const addr = p.baseToken?.address;
+          if (!addr || tracked.has(addr)) continue;
+          const age = Date.now() - (p.pairCreatedAt || Date.now());
+          if (age > 4 * 3600000) continue; // skip older than 4h
+          addToken(addr, p.baseToken.name, p.baseToken.symbol, p.pairCreatedAt || Date.now());
+          ct++;
+          if (ct >= 20) break;
         }
-        if (added >= 40) break;
       }
-    }
-    log('Seeded ' + added + ' tokens from DexScreener');
-    // Kick off immediate scan
-    setTimeout(scanAll, 2000);
-  } catch(e) {
-    log('DexScreener seed failed: ' + e.message);
+      if (ct > 0) log('Seeded ' + ct + ' tokens from DexScreener (q=' + q + ')', 'info');
+    } catch(e) {}
+    await new Promise(r => setTimeout(r, 500)); // rate limit
   }
+
+  // Source 2: Try pump.fun's own API (may fail due to CORS — that's fine)
+  try {
+    const r = await fetch('https://frontend-api-v2.pump.fun/coins/currently-live?limit=50&offset=0&includeNsfw=false');
+    if (r.ok) {
+      const coins = await r.json();
+      let ct = 0;
+      if (Array.isArray(coins)) {
+        for (const c of coins) {
+          if (!c.mint || tracked.has(c.mint)) continue;
+          addToken(c.mint, c.name || 'Unknown', c.symbol || '???', c.created_timestamp || Date.now(), c.image_uri || '');
+          ct++;
+        }
+      }
+      if (ct > 0) log('Seeded ' + ct + ' tokens from pump.fun API', 'match');
+    }
+  } catch(e) {
+    log('pump.fun API unavailable (CORS) — using DexScreener + WebSocket', 'err');
+  }
+
+  // Source 3: Try pump.fun king-of-the-hill
+  try {
+    const r = await fetch('https://frontend-api-v2.pump.fun/coins/king-of-the-hill?includeNsfw=false');
+    if (r.ok) {
+      const coins = await r.json();
+      let ct = 0;
+      if (Array.isArray(coins)) {
+        for (const c of coins) {
+          if (!c.mint || tracked.has(c.mint)) continue;
+          addToken(c.mint, c.name || 'Unknown', c.symbol || '???', c.created_timestamp || Date.now(), c.image_uri || '');
+          ct++;
+        }
+      }
+      if (ct > 0) log('Seeded ' + ct + ' from pump.fun king-of-the-hill', 'match');
+    }
+  } catch(e) {}
+
+  log('Seeding complete — tracking ' + tracked.size + ' tokens, starting scans', 'info');
+  // Kick off first scan immediately
+  setTimeout(scanBatch, 1000);
 }
 
-// ── TOKEN TRACKING ──
-function addToken(mint, name, symbol, created) {
+function addToken(mint, name, symbol, created, img) {
   if (tracked.has(mint)) return;
-  if (tracked.size > 200) {
-    // Purge oldest
-    const oldest = [...tracked.entries()].sort((a,b) => a[1].created - b[1].created)[0];
-    tracked.delete(oldest[0]);
+  if (tracked.size > 300) {
+    // Purge oldest non-match
+    for (const [k, v] of tracked) {
+      if (!matches.has(k)) { tracked.delete(k); break; }
+    }
   }
-  tracked.set(mint, { name, symbol, created, bondPct: null, buys: 0, sells: 0, holders: 0, lastCheck: 0 });
+  tracked.set(mint, { name, symbol, created, img: img||'', bondPct: null, buys:0, sells:0, holders:0, lastScan:0, priceUsd:null, volume:0, marketCap:0, dexUrl:null, scanFails:0 });
   updateStats();
 }
 
-// ── SCAN ALL TOKENS ──
-async function scanAll() {
+// ── SCAN BATCH — read bonding curves on-chain ──
+async function scanBatch() {
   const now = Date.now();
-  const maxAge = 4 * 60 * 60 * 1000; // 4 hours
-  const toScan = [];
-
-  // Remove tokens older than 4h
+  const maxAge = 4 * 3600000;
+  
+  // Purge old tokens
   for (const [mint, t] of tracked) {
-    if (now - t.created > maxAge) {
+    if (now - t.created > maxAge && !matches.has(mint)) {
       tracked.delete(mint);
-      matches.delete(mint);
-      continue;
-    }
-    // Only re-check every 15s
-    if (now - t.lastCheck > 15000) {
-      toScan.push(mint);
     }
   }
 
-  // Batch scan bonding curves (max 10 at a time to avoid RPC rate limits)
-  const batch = toScan.slice(0, 10);
-  for (const mint of batch) {
-    await checkBondingCurve(mint);
-    totalScanned++;
+  // Pick tokens to scan (prioritize those never scanned, then oldest scan)
+  const toScan = [...tracked.entries()]
+    .filter(([_, t]) => now - t.lastScan > 10000 && t.scanFails < 3)
+    .sort((a, b) => a[1].lastScan - b[1].lastScan)
+    .slice(0, 8)
+    .map(([mint]) => mint);
+
+  if (toScan.length === 0) {
+    log('No tokens ready to scan (all recently scanned or failed)');
+    return;
   }
 
-  // For tokens in the golden zone, fetch DexScreener data
-  const goldenMints = [];
+  let curvesRead = 0;
+  let inRange = 0;
+
+  for (const mint of toScan) {
+    const ok = await readBondingCurve(mint);
+    if (ok) {
+      curvesRead++;
+      const t = tracked.get(mint);
+      if (t && t.bondPct !== null) {
+        if (t.bondPct >= 10 && t.bondPct <= 90) inRange++;
+      }
+    }
+    // Small delay between RPC calls
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  scanned += curvesRead;
+  log('Scanned ' + curvesRead + '/' + toScan.length + ' curves, ' + inRange + ' in near range');
+
+  // Fetch DexScreener data for anything with bondPct > 30%
+  const dexMints = [];
   for (const [mint, t] of tracked) {
-    if (t.bondPct !== null && t.bondPct >= 40 && t.bondPct <= 80) {
-      goldenMints.push(mint);
-    }
+    if (t.bondPct !== null && t.bondPct >= 30) dexMints.push(mint);
+  }
+  if (dexMints.length > 0) {
+    await fetchDexData(dexMints.slice(0, 30));
   }
 
-  if (goldenMints.length > 0) {
-    await fetchDexData(goldenMints.slice(0, 30));
-  }
-
-  // Evaluate matches
   evaluateMatches();
   updateStats();
   renderGrid();
 }
 
 // ── READ BONDING CURVE ON-CHAIN ──
-async function checkBondingCurve(mint) {
+async function readBondingCurve(mint) {
   const t = tracked.get(mint);
-  if (!t) return;
-  t.lastCheck = Date.now();
+  if (!t) return false;
+  t.lastScan = Date.now();
 
   try {
     const mintPk = new solanaWeb3.PublicKey(mint);
-    const programPk = new solanaWeb3.PublicKey(PUMP_PROGRAM);
-    const [bondingPda] = await solanaWeb3.PublicKey.findProgramAddress(
-      [Buffer.from('bonding-curve'), mintPk.toBuffer()],
-      programPk
+    // PDA: ["bonding-curve", mint_pubkey]
+    const seed = new TextEncoder().encode('bonding-curve');
+    const [bondingPda] = solanaWeb3.PublicKey.findProgramAddressSync(
+      [seed, mintPk.toBytes()],
+      PUMP_PROGRAM
     );
 
     const acct = await conn.getAccountInfo(bondingPda);
-    if (!acct || !acct.data || acct.data.length < 49) {
-      return;
+    if (!acct || !acct.data) {
+      t.scanFails++;
+      return false;
     }
 
     const data = acct.data;
-    // Read realTokenReserves at offset 24 (u64 LE)
-    const realTokenReserves = data.readBigUInt64LE(24);
-    // Read complete flag at offset 48
+    if (data.length < 49) {
+      t.scanFails++;
+      log('Bond account too small for ' + t.symbol + ' (' + data.length + ' bytes)', 'err');
+      return false;
+    }
+
+    // Read fields using our browser-safe u64 reader
+    // Layout: [8 disc][8 virtTokenRes][8 virtSolRes][8 realTokenRes][8 realSolRes][8 totalSupply][1 complete]
+    const realTokenReserves = readU64LE(data, 24);
     const complete = data[48] === 1;
 
     if (complete) {
-      // Token graduated, remove from tracking
       tracked.delete(mint);
       matches.delete(mint);
-      log(t.symbol + ' graduated — removed');
-      return;
+      log(t.symbol + ' graduated (100%) — removed', 'info');
+      return true;
     }
 
-    // Calculate bonding curve progress
-    const progress = realTokenReserves >= INITIAL_REAL_TOKEN_RESERVES ? 0 :
-      Number((INITIAL_REAL_TOKEN_RESERVES - realTokenReserves) * 10000n / INITIAL_REAL_TOKEN_RESERVES) / 100;
-    
-    t.bondPct = Math.round(progress * 100) / 100;
+    // Calculate progress
+    if (realTokenReserves >= INITIAL_RESERVES) {
+      t.bondPct = 0;
+    } else {
+      t.bondPct = Math.round(Number((INITIAL_RESERVES - realTokenReserves) * 10000n / INITIAL_RESERVES) / 100 * 100) / 100;
+    }
+
+    if (t.bondPct >= 30) {
+      log(t.symbol + ': bonding curve ' + t.bondPct + '%' + (t.bondPct >= 45 && t.bondPct <= 75 ? ' ★ GOLDEN ZONE' : ''), t.bondPct >= 45 && t.bondPct <= 75 ? 'match' : '');
+    }
+
+    return true;
   } catch(e) {
-    // Silently skip — RPC errors are common
+    t.scanFails++;
+    log('RPC error for ' + t.symbol + ': ' + (e.message || e).toString().slice(0, 60), 'err');
+    return false;
   }
 }
 
-// ── FETCH DEXSCREENER DATA ──
+// ── DEXSCREENER DATA ──
 async function fetchDexData(mints) {
-  if (mints.length === 0) return;
+  if (!mints.length) return;
   try {
-    // DexScreener supports up to 30 addresses
-    const addrs = mints.join(',');
-    const res = await fetch('https://api.dexscreener.com/tokens/v1/solana/' + addrs);
-    if (!res.ok) return;
-    const pairs = await res.json();
-    
-    if (Array.isArray(pairs)) {
-      for (const pair of pairs) {
-        const addr = pair.baseToken?.address;
-        if (!addr) continue;
-        const t = tracked.get(addr);
-        if (!t) continue;
-
-        // Get buy/sell counts from txns (last 30 min ~ use h1 / 2 as approximation, or m5 * 6)
-        if (pair.txns) {
-          // Use m5 as closest to 30min signal (multiply by 6 for rough 30m estimate)
-          const m5 = pair.txns.m5 || {};
-          t.buys = (m5.buys || 0) * 6;
-          t.sells = (m5.sells || 0) * 6;
-          
-          // Also check h1 for a smoother signal
-          const h1 = pair.txns.h1 || {};
-          if (h1.buys > t.buys) {
-            t.buys = Math.round(h1.buys / 2);
-            t.sells = Math.round(h1.sells / 2);
-          }
-        }
-
-        // Use pairCreatedAt for age if we don't have it
-        if (pair.pairCreatedAt && (!t.created || t.created > pair.pairCreatedAt)) {
-          t.created = pair.pairCreatedAt;
-        }
-
-        // Estimate holders from unique makers (rough proxy)
-        if (pair.txns && pair.txns.h1) {
-          // Very rough: unique buyers in last hour as proxy for active holders
-          t.holders = (pair.txns.h1.buys || 0) + (pair.txns.h1.sells || 0);
-        }
-
-        // Store extra data
-        t.priceUsd = pair.priceUsd;
-        t.volume = pair.volume?.h1 || 0;
-        t.marketCap = pair.marketCap || pair.fdv || 0;
-        t.liquidity = pair.liquidity?.usd || 0;
-        t.dexUrl = pair.url;
-        t.imageUrl = pair.info?.imageUrl;
+    // Use the tokens endpoint — up to 30 addresses comma-separated
+    const url = 'https://api.dexscreener.com/tokens/v1/solana/' + mints.join(',');
+    const r = await fetch(url);
+    if (!r.ok) {
+      // Fallback to the older endpoint format
+      const r2 = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + mints[0]);
+      if (r2.ok) {
+        const data = await r2.json();
+        if (data.pairs) processDexPairs(data.pairs);
       }
+      return;
+    }
+    const pairs = await r.json();
+    if (Array.isArray(pairs)) {
+      processDexPairs(pairs);
+      log('Fetched DexScreener data for ' + pairs.length + ' pairs', 'info');
     }
   } catch(e) {
-    // Silently handle
+    log('DexScreener error: ' + (e.message||'').slice(0, 50), 'err');
+  }
+}
+
+function processDexPairs(pairs) {
+  for (const p of pairs) {
+    const addr = p.baseToken?.address;
+    if (!addr) continue;
+    const t = tracked.get(addr);
+    if (!t) continue;
+
+    if (p.txns) {
+      // Estimate 30-min buy/sell from m5 (x6) or h1 (/2)
+      const m5 = p.txns.m5 || {};
+      const h1 = p.txns.h1 || {};
+      t.buys = Math.max((m5.buys||0)*6, Math.round((h1.buys||0)/2));
+      t.sells = Math.max((m5.sells||0)*6, Math.round((h1.sells||0)/2));
+      // Holders estimate: total unique txns in h24 as rough proxy
+      const h24 = p.txns.h24 || {};
+      t.holders = (h24.buys||0) + (h24.sells||0);
+    }
+
+    if (p.pairCreatedAt && p.pairCreatedAt < t.created) t.created = p.pairCreatedAt;
+    t.priceUsd = p.priceUsd;
+    t.volume = p.volume?.h1 || 0;
+    t.marketCap = p.marketCap || p.fdv || 0;
+    t.dexUrl = p.url;
   }
 }
 
@@ -378,27 +444,25 @@ async function fetchDexData(mints) {
 function evaluateMatches() {
   matches.clear();
   const now = Date.now();
-  
+
   for (const [mint, t] of tracked) {
     if (t.bondPct === null) continue;
-
-    const ageMin = (now - t.created) / 60000;
+    const ageMin = Math.round((now - t.created) / 60000);
     const ageHr = ageMin / 60;
-    const buySellRatio = t.sells > 0 ? t.buys / t.sells : t.buys;
+    const ratio = t.sells > 0 ? Math.round(t.buys / t.sells * 10) / 10 : (t.buys > 0 ? 99 : 0);
 
-    // Check all criteria
+    // Primary filter: bonding curve in range + age OK
     const bondOk = t.bondPct >= 45 && t.bondPct <= 75;
     const ageOk = ageHr <= 4;
-    const holdersOk = t.holders >= 150 && t.holders <= 500;
-    const ratioOk = buySellRatio >= 4;
 
-    // Relaxed matching: bond curve + age are primary, others are bonus signals
-    // Show if bonding curve is in range AND age is OK — highlight if ALL criteria match
-    if (bondOk && ageOk) {
-      const score = (bondOk ? 1 : 0) + (ageOk ? 1 : 0) + (holdersOk ? 1 : 0) + (ratioOk ? 1 : 0);
+    // Show if bond curve is in range (relax age for display, strict for scoring)
+    if (bondOk) {
+      const holdersOk = t.holders >= 150 && t.holders <= 500;
+      const ratioOk = ratio >= 4;
+      const score = (bondOk?1:0) + (ageOk?1:0) + (holdersOk?1:0) + (ratioOk?1:0);
+
       matches.set(mint, {
-        ...t, mint, ageMin: Math.round(ageMin), buySellRatio: Math.round(buySellRatio * 10) / 10,
-        bondOk, ageOk, holdersOk, ratioOk, score, perfect: score === 4
+        ...t, mint, ageMin, ratio, bondOk, ageOk, holdersOk, ratioOk, score, perfect: score === 4
       });
     }
   }
@@ -414,46 +478,43 @@ function renderGrid() {
     empty.classList.remove('hidden');
     return;
   }
-
   empty.classList.add('hidden');
-  
-  // Sort by score desc, then bonding curve desc
-  const sorted = [...matches.values()].sort((a, b) => {
+
+  const sorted = [...matches.values()].sort((a,b) => {
     if (b.score !== a.score) return b.score - a.score;
     return b.bondPct - a.bondPct;
   });
 
   grid.innerHTML = sorted.map(t => {
-    const barClass = t.bondPct >= 55 && t.bondPct <= 65 ? 'fire' : t.bondPct >= 45 ? 'hot' : 'cold';
-    const ageStr = t.ageMin < 60 ? t.ageMin + 'm' : Math.round(t.ageMin / 60 * 10) / 10 + 'h';
-    const ageClass = t.ageMin <= 90 ? 'good' : t.ageMin <= 240 ? 'warn' : 'bad';
-    const ratioClass = t.buySellRatio >= 4 ? 'good' : t.buySellRatio >= 2 ? 'warn' : 'bad';
-    const holderClass = t.holders >= 150 && t.holders <= 500 ? 'good' : t.holders > 0 ? 'warn' : '';
-    const mcStr = t.marketCap ? '$' + formatNum(t.marketCap) : '—';
-    const volStr = t.volume ? '$' + formatNum(t.volume) : '—';
-    const shortMint = t.mint.slice(0, 6) + '...' + t.mint.slice(-6);
-    const dexLink = t.dexUrl || 'https://dexscreener.com/solana/' + t.mint;
-    const pumpLink = 'https://pump.fun/' + t.mint;
-    
-    return `<div class="tcard${t.perfect ? ' perfect' : ''}">
+    const barCls = t.bondPct >= 55 && t.bondPct <= 65 ? 'fire' : t.bondPct >= 45 ? 'hot' : 'cold';
+    const ageStr = t.ageMin < 60 ? t.ageMin+'m' : (t.ageMin/60).toFixed(1)+'h';
+    const ageCls = t.ageMin <= 90 ? 'good' : t.ageMin <= 240 ? 'warn' : 'bad';
+    const rCls = t.ratio >= 4 ? 'good' : t.ratio >= 2 ? 'warn' : 'bad';
+    const hCls = t.holders >= 150 && t.holders <= 500 ? 'good' : t.holders > 0 ? 'warn' : '';
+    const mc = t.marketCap ? '$'+fmtNum(t.marketCap) : '—';
+    const vol = t.volume ? '$'+fmtNum(t.volume) : '—';
+    const short = t.mint.slice(0,6)+'...'+t.mint.slice(-6);
+    const dex = t.dexUrl || 'https://dexscreener.com/solana/'+t.mint;
+
+    return `<div class="tcard">
       <div class="top">
-        <div><div class="name">${esc(t.name)}</div><div class="sym">${esc(t.symbol)} · <span style="color:#555;font-weight:400">${shortMint}</span></div></div>
+        <div><div class="name">${esc(t.name)}</div><div class="sym">${esc(t.symbol)} · <span style="color:#555;font-weight:400">${short}</span></div></div>
         <div class="age"><strong>${ageStr}</strong>old</div>
       </div>
-      <div class="bbar"><div class="fill ${barClass}" style="width:${Math.min(t.bondPct, 100)}%"><span class="pct">${t.bondPct}%</span></div><div class="zone"></div></div>
+      <div class="bbar"><div class="fill ${barCls}" style="width:${Math.min(t.bondPct,100)}%"><span class="pct">${t.bondPct}%</span></div><div class="zone"></div></div>
       <div class="metrics">
-        <div class="met"><div class="v ${ageClass}">${ageStr}</div><div class="k">Age</div></div>
-        <div class="met"><div class="v ${ratioClass}">${t.buySellRatio}:1</div><div class="k">Buy:Sell</div></div>
-        <div class="met"><div class="v ${holderClass}">${t.holders || '—'}</div><div class="k">Holders ~</div></div>
+        <div class="met"><div class="v ${ageCls}">${ageStr}</div><div class="k">Age</div></div>
+        <div class="met"><div class="v ${rCls}">${t.ratio}:1</div><div class="k">Buy:Sell</div></div>
+        <div class="met"><div class="v ${hCls}">${t.holders||'—'}</div><div class="k">Holders ~</div></div>
       </div>
       <div class="metrics">
-        <div class="met"><div class="v">${mcStr}</div><div class="k">Mkt Cap</div></div>
-        <div class="met"><div class="v">${volStr}</div><div class="k">Vol (1h)</div></div>
-        <div class="met"><div class="v">${t.priceUsd ? '$' + parseFloat(t.priceUsd).toExponential(2) : '—'}</div><div class="k">Price</div></div>
+        <div class="met"><div class="v">${mc}</div><div class="k">Mkt Cap</div></div>
+        <div class="met"><div class="v">${vol}</div><div class="k">Vol (1h)</div></div>
+        <div class="met"><div class="v">${t.priceUsd ? '$'+parseFloat(t.priceUsd).toExponential(2) : '—'}</div><div class="k">Price</div></div>
       </div>
       <div class="acts">
-        <a href="${pumpLink}" target="_blank" class="buy">Pump.fun</a>
-        <a href="${dexLink}" target="_blank">DexScreener</a>
+        <a href="https://pump.fun/${t.mint}" target="_blank" class="buy">Pump.fun</a>
+        <a href="${dex}" target="_blank">DexScreener</a>
         <a href="https://solscan.io/token/${t.mint}" target="_blank">Solscan</a>
       </div>
     </div>`;
@@ -461,36 +522,14 @@ function renderGrid() {
 }
 
 function updateStats() {
-  document.getElementById('sTracking').textContent = tracked.size;
-  document.getElementById('sMatches').textContent = matches.size;
-  document.getElementById('sScanned').textContent = totalScanned;
-  
-  if (matches.size > 0) {
-    const ages = [...matches.values()].map(m => m.ageMin);
-    const avg = Math.round(ages.reduce((a, b) => a + b, 0) / ages.length);
-    document.getElementById('sAge').textContent = avg;
+  document.getElementById('sTrack').textContent = tracked.size;
+  document.getElementById('sMatch').textContent = matches.size;
+  document.getElementById('sScan').textContent = scanned;
+  const withBond = [...tracked.values()].filter(t => t.bondPct !== null);
+  if (withBond.length > 0) {
+    const avg = Math.round(withBond.reduce((a,t) => a + t.bondPct, 0) / withBond.length);
+    document.getElementById('sAvg').textContent = avg + '%';
   }
-}
-
-function formatNum(n) {
-  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
-  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
-  return Math.round(n).toString();
-}
-
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s || '';
-  return d.innerHTML;
-}
-
-function log(msg, type) {
-  const el = document.getElementById('logEntries');
-  const ts = new Date().toLocaleTimeString();
-  const cls = type === 'match' ? 'match' : type === 'skip' ? 'skip' : '';
-  el.innerHTML = `<div class="entry ${cls}">[${ts}] ${msg}</div>` + el.innerHTML;
-  // Keep log manageable
-  while (el.children.length > 50) el.removeChild(el.lastChild);
 }
 </script>
 </body>
