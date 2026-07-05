@@ -6,6 +6,7 @@
   <title>PumpSwap Liquidity</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
   <script src="/config.js"></script>
+  <script>window.process = window.process || { env: {} };</script>
   <script src="https://unpkg.com/@solana/web3.js@1.95.8/lib/index.iife.min.js"></script>
   <link rel="stylesheet" href="/_next/static/css/89420e95f079f7be.css"/>
   <link rel="stylesheet" href="/_next/static/css/e7eddfe4828c1690.css"/>
@@ -150,16 +151,30 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Auto-fill from token just created
   const p=localStorage.getItem('pendingPoolToken');
   if(p){document.getElementById('cpToken').value=p;document.getElementById('rmToken').value=p;localStorage.removeItem('pendingPoolToken');}
-  if(window.solana&&window.solana.isPhantom){phantom=window.solana;phantom.connect({onlyIfTrusted:true}).then(r=>onW(r.publicKey)).catch(()=>{});}
+  getProvider().then(p=>{if(p){phantom=p;phantom.connect({onlyIfTrusted:true}).then(r=>onW(r.publicKey)).catch(()=>{});}});
   ['cpBase','cpQuote'].forEach(id=>document.getElementById(id).addEventListener('input',calcPrice));
   ub();
 });
 document.addEventListener('input',ub);
 
+// Phantom injects window.phantom.solana (current standard) and, for backwards
+// compatibility, window.solana. It can inject a moment after DOMContentLoaded,
+// so poll briefly instead of only checking once.
+function getProvider(retries=10){
+  return new Promise(resolve=>{
+    (function check(n){
+      const p=(window.phantom&&window.phantom.solana&&window.phantom.solana.isPhantom)?window.phantom.solana
+             :(window.solana&&window.solana.isPhantom)?window.solana:null;
+      if(p||n<=0)return resolve(p);
+      setTimeout(()=>check(n-1),150);
+    })(retries);
+  });
+}
 async function doWallet(){
   if(wPk){if(phantom)await phantom.disconnect();wPk=null;document.getElementById('wb').textContent='Connect Wallet';document.getElementById('wb').classList.remove('on');document.getElementById('bal').classList.add('hidden');ub();return;}
-  if(!window.solana||!window.solana.isPhantom){window.open('https://phantom.app/','_blank');toast('Install Phantom','err');return;}
-  try{phantom=window.solana;const r=await phantom.connect();onW(r.publicKey);}catch(e){toast('Cancelled','err');}
+  const p=await getProvider();
+  if(!p){window.open('https://phantom.app/','_blank');toast('Install Phantom','err');return;}
+  try{phantom=p;const r=await phantom.connect();onW(r.publicKey);}catch(e){console.error('Wallet connect failed:',e);toast(e.message||'Cancelled','err');}
 }
 async function onW(pk){
   wPk=pk;const s=pk.toBase58().slice(0,4)+'...'+pk.toBase58().slice(-4);
