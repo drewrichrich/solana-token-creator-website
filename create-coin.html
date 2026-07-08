@@ -1,463 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Create Token</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-  <script src="/config.js"></script>
-  <script>window.process = window.process || { env: {} };</script>
-  <script src="https://unpkg.com/@solana/web3.js@1.95.8/lib/index.iife.min.js"></script>
-  <link rel="stylesheet" href="/_next/static/css/89420e95f079f7be.css"/>
-  <link rel="stylesheet" href="/_next/static/css/e7eddfe4828c1690.css"/>
-  <link rel="stylesheet" href="/_next/static/css/style.css"/>
-  <style>
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#171717;color:#fff;margin:0}
-    .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;border-bottom:1px solid #262626;background:#171717;position:sticky;top:0;z-index:50}
-    .brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:700;font-size:17px}
-    .brand img{width:28px;height:28px;border-radius:6px}
-    .links{display:flex;gap:6px;align-items:center}
-    .links a{color:#a3a3a3;text-decoration:none;font-size:14px;padding:7px 13px;border-radius:7px;font-weight:500}
-    .links a:hover,.links a.active{color:#fff;background:#262626}
-    .wbtn{background:#22c55f!important;color:#fff;border:none;padding:9px 18px;border-radius:9px;font-weight:600;font-size:14px;cursor:pointer}
-    .wbtn:hover{background:#1ea34e!important}
-    .wbtn.on{background:#262626!important;border:1px solid #333}
-    .ctn{max-width:580px;margin:0 auto;padding:28px 20px 60px}
-    .hdr{text-align:center;padding:16px 0 4px}
-    .hdr h1{font-size:24px;font-weight:700}
-    .hdr h1 em{font-style:normal;color:#22c55f}
-    .hdr p{color:#a3a3a3;font-size:14px;margin-top:4px}
-    .card{background:#1f1f1f;border:1px solid #262626;border-radius:14px;padding:22px;margin-top:16px}
-    .card h2{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:7px}
-    .card h2 .n{background:#22c55f;color:#fff;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-    .row{display:flex;gap:14px}
-    .g{flex:1;margin-bottom:12px}
-    .row .g{margin-bottom:0}
-    .g label{display:block;font-size:12px;font-weight:500;color:#bbb;margin-bottom:4px}
-    .g label .r{color:#22c55f}
-    .g input,.g textarea,.g select{width:100%;background:#171717;border:1px solid #333;border-radius:8px;padding:9px 12px;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box}
-    .g input:focus,.g textarea:focus{border-color:#22c55f}
-    .g textarea{resize:vertical;min-height:70px}
-    .g .h{font-size:11px;color:#555;margin-top:3px}
-    .upload{border:2px dashed #333;border-radius:10px;padding:24px;text-align:center;cursor:pointer;position:relative}
-    .upload:hover{border-color:#22c55f}
-    .upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
-    .upload .txt{color:#777;font-size:13px}
-    .upload .txt em{color:#22c55f;font-style:normal}
-    .prev{max-height:60px;border-radius:6px;margin-bottom:6px}
-    .spn{width:24px;height:24px;border:3px solid #333;border-top-color:#22c55f;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
-    @keyframes sp{to{transform:rotate(360deg)}}
-    .tr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #262626}
-    .tr:last-child{border-bottom:none}
-    .tr .tl{font-size:13px;color:#d4d4d4}
-    .tr .tl small{display:block;font-size:11px;color:#666;margin-top:2px}
-    .tg{width:40px;height:22px;background:#333;border-radius:11px;position:relative;cursor:pointer;border:none;flex-shrink:0}
-    .tg.on{background:#22c55f}
-    .tg::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s}
-    .tg.on::after{transform:translateX(18px)}
-    .vbox{background:rgba(34,197,95,.08);border:1px solid rgba(34,197,95,.15);border-radius:10px;padding:12px 14px;margin-top:16px}
-    .vbox h3{font-size:13px;font-weight:600;color:#22c55f;margin-bottom:4px}
-    .vbox p{font-size:12px;color:#a3a3a3;line-height:1.5}
-    .vbox .vs{font-family:monospace;font-size:12px;color:#888;margin-top:6px;word-break:break-all}
-    .vbox .vs strong{color:#22c55f}
-    .bigbtn{width:100%;padding:13px;background:linear-gradient(135deg,#22c55f,#15803d);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:16px}
-    .bigbtn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(34,197,95,.3)}
-    .bigbtn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
-    .bigbtn .bs{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
-    .fee{text-align:center;color:#888;font-size:12px;margin-top:10px}
-    .fee strong{color:#22c55f}
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
-    .modal{background:#1f1f1f;border:1px solid #262626;border-radius:16px;padding:28px;max-width:440px;width:100%;text-align:center}
-    .modal h2{font-size:20px;margin-bottom:6px}
-    .modal .adr{background:#171717;border:1px solid #333;border-radius:8px;padding:10px;font-family:monospace;font-size:11px;color:#a3a3a3;word-break:break-all;margin:12px 0;cursor:pointer}
-    .modal .adr:hover{border-color:#22c55f}
-    .modal .ml{display:flex;gap:8px;margin-top:10px}
-    .modal .ml a{flex:1;padding:9px;border-radius:8px;background:#262626;color:#fff;text-decoration:none;font-size:13px;font-weight:500}
-    .modal .ml a:hover{background:#333}
-    .modal .ml a.p{background:#22c55f}
-    .toast{position:fixed;bottom:20px;right:20px;background:#1f1f1f;border:1px solid #262626;border-radius:10px;padding:12px 16px;font-size:13px;z-index:200;display:flex;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(0,0,0,.4);transform:translateY(80px);opacity:0;transition:all .3s}
-    .toast.show{transform:translateY(0);opacity:1}
-    .toast.err{border-color:#ef4444}.toast.ok{border-color:#22c55f}
-    .hidden{display:none!important}
-    .bal{text-align:center;color:#888;font-size:13px;margin-top:6px}
-    .bal strong{color:#22c55f}
-    @media(max-width:600px){.row{flex-direction:column;gap:0}.ctn{padding:20px 16px 50px}.hdr h1{font-size:20px}}
-  </style>
-</head>
-<body>
-<div class="topbar">
-  <a href="/" class="brand"><img src="/logo.png" alt=""/><span id="nb">TokenCreator</span></a>
-  <div class="links">
-    <a href="/trending">Trending</a>
-    <a href="/create-coin" class="active">Create</a>
-    <a href="/liquidity">Liquidity</a>
-    <button class="wbtn" id="wb" onclick="doWallet()">Connect Wallet</button>
-  </div>
-</div>
-
-<div class="ctn">
-  <div class="hdr">
-    <h1>Create Your <em>PumpSwap</em> Token</h1>
-    <p>Same token, CA just ends with "pump" → launches on PumpSwap</p>
-  </div>
-  <div id="bal" class="bal hidden"></div>
-
-  <!-- TOKEN DETAILS -->
-  <div class="card">
-    <h2><div class="n">1</div> Token Details</h2>
-    <div class="row">
-      <div class="g"><label><span class="r">*</span> Name</label><input id="tName" placeholder="My Token" maxlength="32"/><div class="h">Max 32 characters</div></div>
-      <div class="g"><label><span class="r">*</span> Symbol</label><input id="tSym" placeholder="TKN" maxlength="8" style="text-transform:uppercase"/><div class="h">Max 8 characters</div></div>
-    </div>
-    <div class="row">
-      <div class="g"><label><span class="r">*</span> Total Supply</label><input id="tSupply" type="number" value="1000000000" min="1"/><div class="h">1 billion default</div></div>
-      <div class="g"><label>Decimals</label><input id="tDec" type="number" value="6" min="0" max="9"/><div class="h">6 recommended</div></div>
-    </div>
-    <div class="g"><label><span class="r">*</span> Description</label><textarea id="tDesc" placeholder="Describe your token..." rows="3"></textarea></div>
-    <div class="g">
-      <label><span class="r">*</span> Token Image</label>
-      <div class="upload" id="uz">
-        <input type="file" id="imgIn" accept="image/*"/>
-        <div id="ui"><div style="color:#555;margin-bottom:6px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div><div class="txt"><em>Click to upload</em> (PNG, JPG, GIF)</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SOCIALS -->
-  <div class="card">
-    <h2><div class="n">2</div> Social Links <span style="font-weight:400;color:#666;font-size:12px">(Optional)</span></h2>
-    <div class="g"><label>Twitter / X</label><input id="tTw" placeholder="https://x.com/yourtoken"/></div>
-    <div class="g"><label>Telegram</label><input id="tTg" placeholder="https://t.me/yourtoken"/></div>
-    <div class="g"><label>Website</label><input id="tWb" placeholder="https://yourtoken.com"/></div>
-  </div>
-
-  <!-- AUTHORITIES -->
-  <div class="card">
-    <h2><div class="n">3</div> Revoke Authorities</h2>
-    <p style="color:#888;font-size:12px;margin-bottom:10px">Solana tokens have 3 authorities. Revoke them to build trust.</p>
-    <div class="tr"><div class="tl">Revoke Freeze<small>Prevents freezing holder accounts</small></div><button class="tg on" id="tgF" onclick="this.classList.toggle('on')"></button></div>
-    <div class="tr"><div class="tl">Revoke Mint<small>Prevents minting more supply</small></div><button class="tg on" id="tgM" onclick="this.classList.toggle('on')"></button></div>
-    <div class="tr"><div class="tl">Make Immutable<small>Prevents updating metadata</small></div><button class="tg on" id="tgU" onclick="this.classList.toggle('on')"></button></div>
-  </div>
-
-  <!-- VANITY GRINDER -->
-  <div class="vbox">
-    <h3>🎯 PumpSwap Vanity CA</h3>
-    <p>Your contract address will be ground to end with <strong>"pump"</strong> so it launches on PumpSwap instead of Raydium.</p>
-    <div class="vs" id="vs">Will grind when you click Create.</div>
-  </div>
-
-  <div class="fee">Token creation: <strong>~0.015 SOL</strong> (network fees)</div>
-
-  <button class="bigbtn" id="cBtn" onclick="createToken()" disabled>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-    Create Token
-  </button>
-</div>
-
-<!-- SUCCESS MODAL -->
-<div class="overlay hidden" id="sModal">
-  <div class="modal">
-    <div style="width:48px;height:48px;background:rgba(34,197,95,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55f" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
-    <h2>Token Created! 🎉</h2>
-    <p style="color:#888;font-size:13px">CA ends with "pump" — ready for PumpSwap.</p>
-    <div class="adr" id="mAdr" onclick="navigator.clipboard.writeText(this.textContent);toast('Copied!','ok')" title="Click to copy"></div>
-    <div class="ml">
-      <a id="lScan" href="#" target="_blank">Solscan</a>
-      <a id="lTx" href="#" target="_blank">Transaction</a>
-    </div>
-    <div class="ml" style="margin-top:8px">
-      <a href="/liquidity" class="p">Create Liquidity Pool →</a>
-    </div>
-    <button style="margin-top:14px;background:none;border:1px solid #333;color:#888;padding:7px 20px;border-radius:7px;cursor:pointer;font-size:12px" onclick="document.getElementById('sModal').classList.add('hidden')">Close</button>
-  </div>
-</div>
-
-<div class="toast" id="te"></div>
-
-<script>
-const TOKEN_PROGRAM = new solanaWeb3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
-const ASSOC_TOKEN_PROGRAM = new solanaWeb3.PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
-const METADATA_PROGRAM = new solanaWeb3.PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
-const SYSVAR_RENT = new solanaWeb3.PublicKey('SysvarRent111111111111111111111111111111111');
-const RPC = window.rpc || 'https://api.mainnet-beta.solana.com';
-
-let wPk=null, phantom=null, imgUrl=null;
-
-document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('nb').textContent=window.project_name||'Token Creator';
-  document.title=(window.project_name||'Token Creator')+' | Create Token';
-  document.getElementById('imgIn').addEventListener('change',uploadImg);
-  getProvider().then(p=>{if(p){phantom=p;phantom.connect({onlyIfTrusted:true}).then(r=>onW(r.publicKey)).catch(()=>{});}});
-  ub();
-});
-document.addEventListener('input',ub);
-
-// WALLET
-// Phantom injects window.phantom.solana (current standard) and, for backwards
-// compatibility, window.solana. It can inject a moment after DOMContentLoaded,
-// so poll briefly instead of only checking once.
-function getProvider(retries=10){
-  return new Promise(resolve=>{
-    (function check(n){
-      const p=(window.phantom&&window.phantom.solana&&window.phantom.solana.isPhantom)?window.phantom.solana
-             :(window.solana&&window.solana.isPhantom)?window.solana:null;
-      if(p||n<=0)return resolve(p);
-      setTimeout(()=>check(n-1),150);
-    })(retries);
-  });
-}
-async function doWallet(){
-  if(wPk){if(phantom)await phantom.disconnect();wPk=null;document.getElementById('wb').textContent='Connect Wallet';document.getElementById('wb').classList.remove('on');document.getElementById('bal').classList.add('hidden');ub();return;}
-  const p=await getProvider();
-  if(!p){window.open('https://phantom.app/','_blank');toast('Install Phantom','err');return;}
-  try{phantom=p;const r=await phantom.connect();onW(r.publicKey);}catch(e){console.error('Wallet connect failed:',e);toast(e.message||'Cancelled','err');}
-}
-async function onW(pk){
-  wPk=pk;const s=pk.toBase58().slice(0,4)+'...'+pk.toBase58().slice(-4);
-  document.getElementById('wb').textContent=s;document.getElementById('wb').classList.add('on');ub();
-  try{const c=new solanaWeb3.Connection(RPC,'confirmed');const b=await c.getBalance(pk);document.getElementById('bal').innerHTML='Balance: <strong>'+(b/solanaWeb3.LAMPORTS_PER_SOL).toFixed(4)+' SOL</strong>';document.getElementById('bal').classList.remove('hidden');}catch(e){}
-}
-
-// IMAGE UPLOAD
-async function uploadImg(e){
-  const f=e.target.files[0];if(!f)return;
-  document.getElementById('ui').innerHTML='<div class="spn"></div><div class="txt" style="margin-top:8px">Uploading...</div>';
-  try{
-    const fd=new FormData();fd.append('file',f);
-    const r=await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS',{method:'POST',headers:{pinata_api_key:window.pinata_api_key,pinata_secret_api_key:window.pinata_secret_api_key},body:fd});
-    if(!r.ok)throw 0;const d=await r.json();imgUrl='https://ipfs.io/ipfs/'+d.IpfsHash;
-    document.getElementById('ui').innerHTML='<img src="'+URL.createObjectURL(f)+'" class="prev"/><div class="txt">'+f.name+' — <em>Change</em></div>';
-    toast('Image uploaded','ok');
-  }catch(er){document.getElementById('ui').innerHTML='<div class="txt" style="color:#ef4444">Failed — <em>try again</em></div>';imgUrl=null;toast('Upload failed','err');}
-  ub();
-}
-
-// VANITY GRINDER — find Keypair where base58 ends with "pump"
-function grindVanity(){
-  return new Promise(resolve=>{
-    let n=0;const vs=document.getElementById('vs');
-    function batch(){
-      for(let i=0;i<500;i++){
-        const kp=solanaWeb3.Keypair.generate();
-        n++;
-        if(kp.publicKey.toBase58().toLowerCase().endsWith('pump')){
-          vs.innerHTML='✅ Found after <strong>'+n.toLocaleString()+'</strong> tries: <strong>...'+kp.publicKey.toBase58().slice(-8)+'</strong>';
-          resolve(kp);return;
-        }
-      }
-      vs.innerHTML='⏳ Grinding... <strong>'+n.toLocaleString()+'</strong> tries';
-      setTimeout(batch,0);
-    }
-    batch();
-  });
-}
-
-// HELPER: Borsh-encode a string (u32 LE length + UTF-8 bytes)
-function encStr(s){const b=new TextEncoder().encode(s);const r=new Uint8Array(4+b.length);new DataView(r.buffer).setUint32(0,b.length,true);r.set(b,4);return r;}
-
-// HELPER: concat Uint8Arrays
-function concat(...arrs){const t=arrs.reduce((a,b)=>a+b.length,0);const r=new Uint8Array(t);let o=0;arrs.forEach(a=>{r.set(a,o);o+=a.length;});return r;}
-
-// BUILD METAPLEX CreateMetadataAccountV3 instruction data
-function buildMetadataIxData(name, symbol, uri, isMutable){
-  // Instruction discriminator: 33
-  const disc = new Uint8Array([33]);
-  // DataV2: name, symbol, uri, sellerFeeBasisPoints(u16), creators(option), collection(option), uses(option)
-  const nameB = encStr(name);
-  const symB = encStr(symbol);
-  const uriB = encStr(uri);
-  const fee = new Uint8Array(2); // 0 seller fee
-  const noCreators = new Uint8Array([0]); // None
-  const noCollection = new Uint8Array([0]); // None  
-  const noUses = new Uint8Array([0]); // None
-  // isMutable
-  const mut = new Uint8Array([isMutable ? 1 : 0]);
-  // collectionDetails: None
-  const noCD = new Uint8Array([0]);
-  return concat(disc, nameB, symB, uriB, fee, noCreators, noCollection, noUses, mut, noCD);
-}
-
-// CREATE TOKEN
-async function createToken(){
-  if(!wPk||!phantom){toast('Connect wallet','err');return;}
-  const name=document.getElementById('tName').value.trim();
-  const sym=document.getElementById('tSym').value.trim().toUpperCase();
-  const desc=document.getElementById('tDesc').value.trim();
-  const supply=parseInt(document.getElementById('tSupply').value)||1000000000;
-  const decimals=parseInt(document.getElementById('tDec').value)||6;
-  if(!name||!sym||!imgUrl){toast('Fill required fields','err');return;}
-
-  const btn=document.getElementById('cBtn');
-  btn.disabled=true;btn.innerHTML='<div class="bs"></div> Grinding vanity CA...';
-
-  try{
-    // 1) GRIND VANITY KEYPAIR
-    toast('Grinding CA ending with "pump"...','info');
-    const mintKp = await grindVanity();
-    const mint = mintKp.publicKey;
-
-    // 2) UPLOAD METADATA JSON TO IPFS
-    btn.innerHTML='<div class="bs"></div> Uploading metadata...';
-    toast('Uploading metadata...','info');
-    const meta={name,symbol:sym,description:desc,image:imgUrl,
-      attributes:[
-        {trait_type:'Twitter',value:document.getElementById('tTw').value.trim()},
-        {trait_type:'Telegram',value:document.getElementById('tTg').value.trim()},
-        {trait_type:'Website',value:document.getElementById('tWb').value.trim()},
-      ],
-      properties:{files:[{uri:imgUrl,type:'image/png'}],category:'image',creators:[{address:wPk.toBase58(),share:100}]}
-    };
-    const mRes=await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS',{method:'POST',headers:{'Content-Type':'application/json',pinata_api_key:window.pinata_api_key,pinata_secret_api_key:window.pinata_secret_api_key},body:JSON.stringify(meta)});
-    if(!mRes.ok)throw new Error('Metadata upload failed');
-    const mD=await mRes.json();
-    const metaUri='https://ipfs.io/ipfs/'+mD.IpfsHash;
-
-    // 3) BUILD TRANSACTION
-    btn.innerHTML='<div class="bs"></div> Building transaction...';
-    toast('Building token creation tx...','info');
-    const conn = new solanaWeb3.Connection(RPC,'confirmed');
-    const lamports = await conn.getMinimumBalanceForRentExemption(82);
-    const supplyRaw = BigInt(supply) * BigInt(10 ** decimals);
-
-    // ATA address
-    const [ata] = await solanaWeb3.PublicKey.findProgramAddress(
-      [wPk.toBuffer(), TOKEN_PROGRAM.toBuffer(), mint.toBuffer()],
-      ASSOC_TOKEN_PROGRAM
-    );
-
-    // Metadata PDA
-    const [metadataPda] = await solanaWeb3.PublicKey.findProgramAddress(
-      [Buffer.from('metadata'), METADATA_PROGRAM.toBuffer(), mint.toBuffer()],
-      METADATA_PROGRAM
-    );
-
-    const tx = new solanaWeb3.Transaction();
-
-    // a) Create mint account
-    tx.add(solanaWeb3.SystemProgram.createAccount({
-      fromPubkey: wPk,
-      newAccountPubkey: mint,
-      lamports,
-      space: 82,
-      programId: TOKEN_PROGRAM
-    }));
-
-    // b) InitializeMint — instruction index 0
-    const initData = new Uint8Array(67);
-    initData[0] = 0; // InitializeMint
-    initData[1] = decimals;
-    initData.set(wPk.toBytes(), 2);       // mintAuthority
-    initData[34] = 1;                      // freezeAuthority option: Some
-    initData.set(wPk.toBytes(), 35);       // freezeAuthority
-    tx.add(new solanaWeb3.TransactionInstruction({
-      keys:[{pubkey:mint,isSigner:false,isWritable:true},{pubkey:SYSVAR_RENT,isSigner:false,isWritable:false}],
-      programId:TOKEN_PROGRAM,data:Buffer.from(initData)
-    }));
-
-    // c) Create Associated Token Account (idempotent = instruction index 1)
-    tx.add(new solanaWeb3.TransactionInstruction({
-      keys:[
-        {pubkey:wPk,isSigner:true,isWritable:true},
-        {pubkey:ata,isSigner:false,isWritable:true},
-        {pubkey:wPk,isSigner:false,isWritable:false},
-        {pubkey:mint,isSigner:false,isWritable:false},
-        {pubkey:solanaWeb3.SystemProgram.programId,isSigner:false,isWritable:false},
-        {pubkey:TOKEN_PROGRAM,isSigner:false,isWritable:false},
-      ],
-      programId:ASSOC_TOKEN_PROGRAM,data:Buffer.from([1]) // CreateIdempotent
-    }));
-
-    // d) MintTo — instruction index 7
-    const mintToData = new Uint8Array(9);
-    mintToData[0] = 7;
-    const dv = new DataView(mintToData.buffer);
-    dv.setBigUint64(1, supplyRaw, true);
-    tx.add(new solanaWeb3.TransactionInstruction({
-      keys:[
-        {pubkey:mint,isSigner:false,isWritable:true},
-        {pubkey:ata,isSigner:false,isWritable:true},
-        {pubkey:wPk,isSigner:true,isWritable:false},
-      ],
-      programId:TOKEN_PROGRAM,data:Buffer.from(mintToData)
-    }));
-
-    // e) Create Metadata (Metaplex)
-    const isMutable = !document.getElementById('tgU').classList.contains('on');
-    const metaIxData = buildMetadataIxData(name, sym, metaUri, isMutable);
-    tx.add(new solanaWeb3.TransactionInstruction({
-      keys:[
-        {pubkey:metadataPda,isSigner:false,isWritable:true},
-        {pubkey:mint,isSigner:false,isWritable:false},
-        {pubkey:wPk,isSigner:true,isWritable:false},  // mint authority
-        {pubkey:wPk,isSigner:true,isWritable:true},    // payer
-        {pubkey:wPk,isSigner:true,isWritable:false},   // update authority
-        {pubkey:solanaWeb3.SystemProgram.programId,isSigner:false,isWritable:false},
-        {pubkey:SYSVAR_RENT,isSigner:false,isWritable:false},
-      ],
-      programId:METADATA_PROGRAM,data:Buffer.from(metaIxData)
-    }));
-
-    // f) Revoke Freeze Authority — SetAuthority instruction index 6, type 1
-    if(document.getElementById('tgF').classList.contains('on')){
-      const d=new Uint8Array([6,1,0]); // SetAuthority, FreezeAccount, None
-      tx.add(new solanaWeb3.TransactionInstruction({
-        keys:[{pubkey:mint,isSigner:false,isWritable:true},{pubkey:wPk,isSigner:true,isWritable:false}],
-        programId:TOKEN_PROGRAM,data:Buffer.from(d)
-      }));
-    }
-
-    // g) Revoke Mint Authority — SetAuthority instruction index 6, type 0
-    if(document.getElementById('tgM').classList.contains('on')){
-      const d=new Uint8Array([6,0,0]); // SetAuthority, MintTokens, None
-      tx.add(new solanaWeb3.TransactionInstruction({
-        keys:[{pubkey:mint,isSigner:false,isWritable:true},{pubkey:wPk,isSigner:true,isWritable:false}],
-        programId:TOKEN_PROGRAM,data:Buffer.from(d)
-      }));
-    }
-
-    // 4) SIGN & SEND
-    btn.innerHTML='<div class="bs"></div> Approve in wallet...';
-    toast('Approve in Phantom...','info');
-    
-    tx.recentBlockhash = (await conn.getLatestBlockhash()).blockhash;
-    tx.feePayer = wPk;
-    tx.partialSign(mintKp);
-    const signed = await phantom.signTransaction(tx);
-    
-    btn.innerHTML='<div class="bs"></div> Submitting...';
-    toast('Submitting transaction...','info');
-    const sig = await conn.sendRawTransaction(signed.serialize(),{skipPreflight:false,maxRetries:3});
-    await conn.confirmTransaction(sig,'confirmed');
-
-    // 5) SUCCESS
-    const addr=mint.toBase58();
-    const rec={tokenAddress:addr,txId:sig,name,symbol:sym,totalSupply:supply,decimals,creationDate:new Date().toISOString(),image:imgUrl};
-    const ex=JSON.parse(localStorage.getItem('createdTokens')||'[]');ex.unshift(rec);localStorage.setItem('createdTokens',JSON.stringify(ex));
-    
-    document.getElementById('mAdr').textContent=addr;
-    document.getElementById('lScan').href='https://solscan.io/token/'+addr;
-    document.getElementById('lTx').href='https://solscan.io/tx/'+sig;
-    document.getElementById('sModal').classList.remove('hidden');
-    toast('Token created!','ok');
-
-    // Platform fee
-    if(window.recipient&&window.base_fee>0){try{const ft=new solanaWeb3.Transaction().add(solanaWeb3.SystemProgram.transfer({fromPubkey:wPk,toPubkey:new solanaWeb3.PublicKey(window.recipient),lamports:Math.floor(window.base_fee*solanaWeb3.LAMPORTS_PER_SOL)}));ft.recentBlockhash=(await conn.getLatestBlockhash()).blockhash;ft.feePayer=wPk;const sf=await phantom.signTransaction(ft);await conn.sendRawTransaction(sf.serialize());}catch(fe){}}
-
-  }catch(er){
-    console.error(er);
-    toast(er.message?.includes('User rejected')?'Rejected by wallet':er.message||'Creation failed','err');
-  }finally{
-    btn.disabled=false;btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Create Token';ub();
-  }
-}
-
-function ub(){
-  const n=document.getElementById('tName').value.trim();
-  const s=document.getElementById('tSym').value.trim();
-  document.getElementById('cBtn').disabled=!wPk||!n||!s||!imgUrl;
-}
-function toast(m,t){const e=document.getElementById('te');e.className='toast '+(t==='err'?'err':t==='ok'?'ok':'');e.textContent=m;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),3500);}
-</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="preload"
+      href="/_next/static/media/569ce4b8f30dc480-s.p.woff2"
+      as="font"
+      crossorigin=""
+      type="font/woff2"
+    />
+    <link
+      rel="preload"
+      href="/_next/static/media/93f479601ee12b01-s.p.woff2"
+      as="font"
+      crossorigin=""
+      type="font/woff2"
+    />
+    <link
+      rel="stylesheet"
+      href="/_next/static/css/89420e95f079f7be.css?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      data-precedence="next"
+    />
+    <link
+      rel="stylesheet"
+      href="/_next/static/css/style.css?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      data-precedence="next"
+    />
+    <link
+      rel="preload"
+      as="script"
+      fetchPriority="low"
+      href="/_next/static/chunks/webpack-adb0bcedef76ed26.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+    />
+    <script src="/config.js" async=""></script>
+    <script
+      src="/_next/static/chunks/4bd1b696-2225b17114d13006.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/517-b2ab71301526dda2.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/main-app-f716d1d8434d3035.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/app/layout-1ecde706e601d63b.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/3a91511d-5c5d9b2737fa22c8.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/7e320fe9-e1ab3e5bedfc85f6.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/55-a49fd5895dd611db.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/464-9bd2937dd1bad713.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/651-00abff630c3ac98a.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/579-36864d8f64a4b5f7.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/114-8ee2395e84b97d98.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/94-6b5be46cb3fd5083.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/427-8280bb0e870863c0.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/713-e01b7635b29d6020.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script
+      src="/_next/static/chunks/app/create-coin/page-2a98f274f030a7df.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <link
+      rel="preload"
+      href="/_next/static/css/e7eddfe4828c1690.css?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      as="style"
+    />
+    <meta name="next-size-adjust" content="" />
+    <title>CoinBlast | Create Solana Tokens in Seconds</title>
+    <meta
+      name="description"
+      content="CoinBlast | Create Solana Tokens in Seconds. No coding required. Launch tokens, manage authorities, and set up liquidity pools easily."
+    />
+    <meta
+      name="keywords"
+      content="coinfast,solana,token creation,cryptocurrency,coinblast,coinblast.fun,meme coins"
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="256x256" />
+    <script
+      src="/_next/static/chunks/polyfills-42372ed130431b0a.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      nomodule=""
+    ></script>
+  </head>
+  <body class="__variable_4d318d __variable_ea5f4b antialiased">
+    <!--$!--><template data-dgst="BAILOUT_TO_CLIENT_SIDE_RENDERING"></template
+    ><!--/$-->
+    <script
+      src="/_next/static/chunks/webpack-adb0bcedef76ed26.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"
+      async=""
+    ></script>
+    <script>
+      (self.__next_f = self.__next_f || []).push([0]);
+    </script>
+    <script>
+      self.__next_f.push([
+        1,
+        '1:"$Sreact.fragment"\n2:I[53704,["177","static/chunks/app/layout-1ecde706e601d63b.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"],""]\n3:I[85407,["177","static/chunks/app/layout-1ecde706e601d63b.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"],"default"]\n4:I[15244,[],""]\n5:I[43866,[],""]\n6:I[73646,["956","static/chunks/3a91511d-5c5d9b2737fa22c8.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","600","static/chunks/7e320fe9-e1ab3e5bedfc85f6.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","55","static/chunks/55-a49fd5895dd611db.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","464","static/chunks/464-9bd2937dd1bad713.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","651","static/chunks/651-00abff630c3ac98a.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","579","static/chunks/579-36864d8f64a4b5f7.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","114","static/chunks/114-8ee2395e84b97d98.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","94","static/chunks/94-6b5be46cb3fd5083.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","427","static/chunks/427-8280bb0e870863c0.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","713","static/chunks/713-e01b7635b29d6020.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","259","static/chunks/app/create-coin/page-2a98f274f030a7df.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"],"TokenCreationForm"]\n7:I[68476,["956","static/chunks/3a91511d-5c5d9b2737fa22c8.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","600","static/chunks/7e320fe9-e1ab3e5bedfc85f6.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","55","static/chunks/55-a49fd5895dd611db.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","464","static/chunks/464-9bd2937dd1bad713.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","651","static/chunks/651-00abff630c3ac98a.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","579","static/chunks/579-36864d8f64a4b5f7.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","114","static/chunks/114-8ee2395e84b97d98.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","94","static/chunks/94-6b5be46cb3fd5083.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","427","static/chunks/427-8280bb0e870863c0.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","713","static/chunks/713-e01b7635b29d6020',
+      ]);
+    </script>
+    <script>
+      self.__next_f.push([
+        1,
+        '.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","259","static/chunks/app/create-coin/page-2a98f274f030a7df.js?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi"],"default"]\n8:I[86213,[],"OutletBoundary"]\na:I[86213,[],"MetadataBoundary"]\nc:I[86213,[],"ViewportBoundary"]\ne:I[34835,[],""]\n:HL["/_next/static/media/569ce4b8f30dc480-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]\n:HL["/_next/static/media/93f479601ee12b01-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]\n:HL["/_next/static/css/89420e95f079f7be.css?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","style"]\n:HL["/_next/static/css/e7eddfe4828c1690.css?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","style"]\n',
+      ]);
+    </script>
+    <script>
+      self.__next_f.push([
+        1,
+        '0:{"P":null,"b":"oeNEFB8fWNtd7Usu5c6Sd","p":"","c":["","create-coin"],"i":false,"f":[[["",{"children":["create-coin",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/89420e95f079f7be.css?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[[["$","$L2",null,{"async":true,"defer":true,"data-api":"$undefined","data-domain":"coinblast.fun","data-exclude":"$undefined","src":"","integrity":"$undefined","crossOrigin":"$undefined"}],["$","$L2",null,{"id":"next-plausible-init","dangerouslySetInnerHTML":{"__html":"window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }"},"nonce":"$undefined"}],"$undefined"],["$","$L2",null,{"async":true,"src":""}],["$","$L2",null,{"id":"google-analytics","children":"\\n            window.dataLayer = window.dataLayer || [];\\n            function gtag(){dataLayer.push(arguments);}\\n            gtag(\'js\', new Date());\\n            gtag(\'config\', \'AW-764344438\');\\n          "}]]}],["$","body",null,{"className":"__variable_4d318d __variable_ea5f4b antialiased","children":["$","$L3",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\\"Segoe UI\\",Roboto,Helvetica,Arial,sans-serif,\\"Apple Color Emoji\\",\\"Segoe UI Emoji\\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["create-coin",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","create-coin","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","main",null,{"className":"flex-1 flex flex-col items-center justify-center bg-neutral-900","children":[["$","h1",null,{"className":"text-2xl sm:text-4xl font-bold mb-2 text-white bg-indigo-600 px-4 py-2 rounded-lg Lexend text-center","children":"Create Your Own Coin FAST ⚡"}],["$","p",null,{"className":"text-base sm:text-lg text-neutral-400 text-center mb-6 sm:mb-0","children":"Launch your own coin on Solana in seconds. No coding required."}],["$","$L6",null,{}],["$","$L7",null,{}]]}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/e7eddfe4828c1690.css?dpl=dpl_AZa29Fm7QrvC376Ea3z7TMtAGJoi","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","$L8",null,{"children":"$L9"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","EvVgPqPjT36dOJdW3iFxe",{"children":[["$","$La",null,{"children":"$Lb"}],["$","$Lc",null,{"children":"$Ld"}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]]}],false]],"m":"$undefined","G":["$e","$undefined"],"s":false,"S":true}\n',
+      ]);
+    </script>
+    <script>
+      self.__next_f.push([
+        1,
+        'd:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]\nb:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"CoinBlast | Create Solana Tokens in Seconds"}],["$","meta","2",{"name":"description","content":"CoinBlast | Create Solana Tokens in Seconds. No coding required. Launch tokens, manage authorities, and set up liquidity pools easily."}],["$","meta","3",{"name":"keywords","content":"coinfast,solana,token creation,cryptocurrency,coinblast,coinblast.fun,meme coins"}],["$","link","4",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"256x256"}]]\n',
+      ]);
+    </script>
+    <script>
+      self.__next_f.push([1, "9:null\n"]);
+    </script>
+  </body>
 </html>
